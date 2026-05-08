@@ -299,7 +299,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     ["YEAR",           eq.year ? String(eq.year) : "—"],
     ["ORIGIN",         eq.origin],
     ["FUEL",           eq.fuel],
-    ["AVAILABLE",      `${eq.quantity} ${STR.units}`],
+    ["AVAILABLE",      fmtQty(eq.quantity)],
   ];
   const rowH = (heroH - 6) / facts.length;
   facts.forEach(([k, v], i) => {
@@ -339,7 +339,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     [STR.origin,   eq.origin],
     [STR.year,     eq.year ? String(eq.year) : "—"],
     [STR.fuel,     eq.fuel],
-    [STR.qty,      `${eq.quantity} ${STR.units}`],
+    [STR.qty,      fmtQty(eq.quantity)],
     [STR.notes,    eq.notes || "—"],
     [STR.asset,    eq.id],
   ];
