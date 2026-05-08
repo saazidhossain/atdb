@@ -121,8 +121,8 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
-  /* Responsive media defaults — prevent CLS and overflow */
-  img, video { max-width: 100%; height: auto; }
+  /* Responsive media defaults — prevent overflow without breaking object-cover sizing */
+  img, video { max-width: 100%; }
   h1, h2, h3, .font-display {
     font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
     letter-spacing: -0.02em;
