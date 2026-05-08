@@ -1,138 +1,216 @@
-## 0. Findings from re-audit
 
-I re-cloned `saazidhossain/ATDB-before-launch`, parsed your `Product_Inventory_Master_List.pdf`, and diffed everything against the live project.
+# Full Audit & Top 1% Production Quality Upgrade
 
-### A. Inventory mismatches vs master list (CRITICAL — data correctness)
+## Phase 1: Critical Bug Fixes
 
-The current `src/data/equipment.ts` contains many fabricated / wrong entries that do not match your master list. These must be fixed before handover.
+### 1.1 Fix SSR Hydration Mismatch
+The HeroMedia component uses `window.matchMedia` in `useState` initializer, causing server/client mismatch. The server renders `false` (no window), but the client may render `true` on mobile.
 
-**Cranes (master = 7)**
-- `CR-004`: master = **Kato KR-35H-III, 35T, 2012**. Current shows "Kato KR-25H-V (Unit A), 25T, 2000". Wrong.
-- `CR-005`: master = **Kato KR-25H-V7, 25T, 2017**. Current shows "KR-25H-V (Unit B), 25T, 2002". Wrong year/variant.
-- `CR-007`: master = **Kato KR-10H, 10T, 2002**. Current shows "Kato KR-100 Lattice Boom, 10T, 1995". Wrong model.
-- CR-001/002/003/006: OK (minor field polish).
+**Fix:** Default `isMobile` to `false` on both server and client initial render, then update in `useEffect` only. This eliminates the hydration error.
 
-**Road Rollers (master = 9)**
-- `RR-003`: master = **Dynapac HP89042ST, 10T, 1 Drum + 2 Tier Wheel, Sweden, 2013**. Current shows "Advance 3-Wheel, 8T, India". Completely wrong unit.
-- `RR-005`: origin should be **Japan** (current says Germany).
-- `RR-006`: master = **Hawa JV-40-CW1, 4/6T, Vibration, Japan, 2013**. Current shows "Hawa Tandem, 2T, India, 2018". Wrong.
-- `RR-007`: master = **Advance, 8.5T, 3-Wheel Steel, 2015**. Current shows "CAT CS54, 5T, Vibratory Soil". Wrong unit (CAT CS54 doesn't exist in master — must be removed).
-- `RR-009`: master = **Sakai 920, 3.5/5T, Drum Steel Vibration, 2014**. Current shows "Sakai SV902 (Unit B), 10T, 2012". Wrong (duplicate of RR-001 image).
+**Files:** `src/components/home/HeroMedia.tsx`
 
-**Excavators & Heavy Machinery (master = 3 under EX prefix)**
-- `EX-001`: master = **CAT CAT11020 Soil Compactor, 12/18T, 2014**. Current shows "Komatsu PC40 Mini Excavator". Swapped.
-- `EX-002`: OK (CAT 320BU).
-- `EX-003`: master = **Komatsu PC40, 2017**. Current shows "CAT Plate Compactor, 200 kg". Wrong (and CAT plate compactor isn't in master).
+### 1.2 Fix SectionDivider SSR crash
+`window.matchMedia` called at effect top-level without SSR guard.
 
-**Loaders (master = 3)**
-- `LD-002`: master model = **XCMG KMC 950 Pay Loader, 2017**. Current shows "XCMG Wheel Loader, 3T, 2020". Model/year wrong.
-- `LD-003`: master = **JCB JC 0.6 Backhoe Loader, 2014, India**. Current shows "JCB Backhoe, UK, 2015". Origin/year wrong.
+**Fix:** Add `typeof window !== "undefined"` check.
 
-**Support Equipment (master = 9 line items, ~21 units)**
-The current SP-001..SP-009 list is largely fabricated (Honda GX160 vibrator, Robin EY20, Welding machine, Bar bending machine, etc.) and does NOT match your master list. Must be replaced with the actual master list:
-1. Honda GQR-350 Cutting Machine (2 units, 2021)
-2. Honda HSP-500C Cutting Machine (2 units, 2020)
-3. Honda HZR-90 Plate Compactor (2 units)
-4. Honda 80k-100 Sand Compactor (2 units) — already present as SP-004 ✓
-5. Honda ER2500CX Generator (3 units) — present as SP-005 (qty wrong, "01" → "03")
-6. Zhejiang BS-8000WT Generator (1 unit)
-7. Honda 700 RPM Asphalt Core Cutter
-8. Honda GXCR200ST Big Drill Hammer (5 units)
-9. TATA T7 Ultra Drum Truck (2 units) — currently mis-labelled as "TATA LPT 1613"
+**Files:** `src/components/SectionDivider.tsx`
 
-### B. Image-to-product mapping issues
-- Many items reuse `/assets/support-tools-Dnowl7z-.webp` or `/assets/sakai-sv900-CJzZY7Ph.webp` regardless of model — wrong product photos showing on wrong products.
-- Real-photo folders that exist on disk (verified): `CR-002, EX-002, LD-001, RR-004, RR-005, RR-008, SP-004, SP-005`. Only these IDs should declare `realPhotos`. Any other entry referencing real photos that don't exist will 404 — must be cleaned.
-- Items with no brand-specific mockup must fall back to a category placeholder (cranes / rollers / excavators / loaders / support), not to an unrelated unit.
+### 1.3 Fix PagePreloader SSR safety
+Direct `window` access in `useEffect` is fine, but `document.readyState` should be guarded.
 
-### C. UI / UX issues spotted
-- Equipment category index counts are stale strings ("9 units", "7 units" etc.) and will lie once we fix the data. Should compute from `equipmentData` at runtime.
-- `/equipment` landing page shows 5 categories but layout is `md:grid-cols-2` → an awkward orphan card on the last row. Should be `lg:grid-cols-3`.
-- Navbar / hero / cards sometimes overflow at 360–414 px — Bengali strings wrap badly because `font-display` lacks Bengali glyphs (need `font-bengali` swap when `lang === "bn"`).
-- WhatsApp FAB and Cart drawer can overlap the sticky footer CTA on mobile.
-- Equipment detail "related" section can show duplicates and the same image repeated.
-- Spec-sheet PDF (`generatePDF.ts`) prints labels in English only and skips Bengali rows; needs an `lang`-aware variant + ATDB header/logo + correct unit counts.
-- No `<title>` / meta differentiation on `equipment.$category.index` and `equipment.$category.$id` routes.
-- No 404 component on the root route.
-- Images missing `width`/`height` (CLS), `loading="lazy"` on below-fold, and `decoding="async"`.
-- Hero gallery autoplays a video without `playsinline` + `muted` + reduced-motion guard.
-
-### D. Production-readiness gaps
-- No `robots.txt` sitemap entry, no `sitemap.xml`.
-- No JSON-LD (`Organization`, `Product` per equipment, `BreadcrumbList`).
-- No Open Graph image per route (uses generic).
-- No analytics opt-in (consent-respecting).
-- No error boundary at route level (only global).
-- ESLint + Prettier formatting drift across ported files.
-- Dead/duplicate logo files in `public/assets` (`atdb-logo-dark.webp` AND `atdb-logo-dark-CMkcsUAi.webp`).
-- No favicons beyond `favicon.ico` (no `apple-touch-icon`, no PNG sizes, no `manifest.webmanifest`).
+**Files:** `src/components/PagePreloader.tsx` (minor)
 
 ---
 
-## 1. Plan — Phase by phase
+## Phase 2: Animation & Transition Upgrade (Top 1%)
 
-### Phase 1 — Data correctness (highest priority)
-1. Rewrite `src/data/equipment.ts` so every item matches the master list 1:1 (IDs, brand, model, capacity, year, origin, fuel, quantity, notes). No fabricated SKUs. Quantities match master ("01", "02", "03", "05" for HZR/GQR/HSP/ER2500CX/GXCR200ST etc.).
-2. Replace the fabricated Support items SP-001..SP-009 with the 9 real master entries. Renumber so each line item gets one ID; keep `quantity` field for multi-unit lines (e.g. `"02"` for cutters).
-3. Map every product to the correct image:
-   - Use brand/model-specific mockup when one exists in `/public/assets`.
-   - Otherwise fall back to a category hero (`/assets/eq-crane-liebherr-…`, `/assets/eq-roller-sakai-…`, `/assets/eq-excavator-cat-…`, `/assets/loader-detail-…`, `/assets/eq-support-…`).
-   - Strip `realPhotos` from any item whose folder doesn't exist; keep them only for `CR-002, EX-002, LD-001, RR-004, RR-005, RR-008, SP-004, SP-005`.
-4. Compute `equipmentCategories[*].units` and `range` at runtime from the data — no more hardcoded counts.
-5. Add a tiny dev-only assertion (`if (import.meta.env.DEV) validateEquipment()`) that warns on duplicate IDs, missing images, or broken `realPhotos`.
+### 2.1 GPU-accelerated smooth scrolling
+Replace CSS `scroll-behavior: smooth` with Lenis smooth scroll for buttery 120fps scrolling with momentum. This is the single biggest UX differentiator for premium sites.
 
-### Phase 2 — Guided smoke-test checklist page
-New route `/qa` (hidden from nav, indexable=`noindex`) — a one-page checklist for you to walk through before handover. It includes:
-- Live deep-links to: Home, every Equipment category, 2–3 Equipment detail pages (one with real photos + video, one mockup-only), Projects, About, Contact.
-- Inline checks: "Toggle EN/বাংলা — does this string change?", "Click WhatsApp FAB → opens wa.me with prefilled message", "Click Quote on WhatsApp on a card", "Click Download PDF — opens spec sheet", "Add to cart → drawer opens → WhatsApp checkout link contains the item".
-- Each row has a checkbox (state stored in localStorage) and a "Test now" button that opens the target route in a new tab.
-- A summary bar showing X/Y checks complete, plus an "Export report" button (downloads a JSON of pass/fail with timestamps).
+**Files:** `src/pages/Index.tsx`, `src/styles.css`, install `lenis` package
 
-### Phase 3 — UI/UX polish (no content/feature change)
-- Switch Bengali text to `font-bengali` (Hind Siliguri / Noto Sans Bengali) automatically when `lang === "bn"` via a `lang` attribute and CSS `:lang(bn)` selector. Fix wrap/overflow on small screens with `text-balance` and consistent `min-w-0`.
-- `/equipment` landing grid → `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` and ensure the last row balances (`auto-rows-fr`, equal heights).
-- Equipment cards: consistent aspect ratio, brand chip top-left, unit-count badge for multi-quantity items, lazy-load all below-fold images, add `width`/`height` to prevent CLS.
-- Equipment detail: image gallery with thumbnails + keyboard nav + Esc-to-close lightbox; spec table rendered with semantic `<dl>`; related-items strip excludes self and dedupes.
-- Navbar: collapse correctly at 414 px; cart count badge placement; visible focus rings; sticky behavior with backdrop blur.
-- Hero: respect `prefers-reduced-motion`; ensure hero `<video>` has `muted`, `playsinline`, `preload="metadata"`, `poster=`; provide an LCP-friendly poster image.
-- Footer: align columns at all breakpoints; add NAP (Name/Address/Phone) consistent with Contact page; clickable `tel:` and `mailto:` links.
-- WhatsApp FAB: lift above sticky bars, add tooltip, respect safe-area-inset on iOS.
-- Cart drawer: empty state, Clear-all confirm, locale-aware date inputs.
+### 2.2 Staggered reveal animations
+Upgrade `RevealOnScroll` to support stagger delays for child elements (cards, grid items). Currently all children appear at once -- premium sites stagger them 50-80ms apart.
 
-### Phase 4 — Spec-sheet PDF upgrade
-- Add ATDB logo + brand bar + "Quotation request" footer with WhatsApp/phone/email.
-- Render Bengali rows when `lang === "bn"` using a Bengali-capable font embedded in jsPDF (`Hind Siliguri` woff → ttf via base64).
-- Include all spec rows (ID, brand, model, capacity, year, origin, fuel, quantity, notes) and an embedded thumbnail.
-- File name pattern: `ATDB-<id>-spec.pdf`.
+**Files:** `src/components/RevealOnScroll.tsx`
 
-### Phase 5 — SEO, performance, accessibility, a11y
-- Per-route `head()` with unique `<title>` (≤60 chars, includes "ATDB"), description (≤160 chars), `og:title`, `og:description`, `og:image` (route-specific), `twitter:card`.
-- JSON-LD: `Organization` on root, `Product` on each equipment detail (`name`, `brand`, `category`, `image`), `BreadcrumbList` on category + detail, `LocalBusiness` on Contact.
-- `sitemap.xml` (statically generated from routes + equipment ids) and `robots.txt` linking to it.
-- Canonical tags on every route.
-- Lighthouse pass: image dimensions, `font-display: swap`, code-split route bundles, drop unused Radix primitives.
-- a11y: skip-to-content link, `aria-label` on icon-only buttons (some are missing), color-contrast pass on orange-on-dark CTAs, keyboard nav for cart drawer + lightbox, `prefers-reduced-motion` for framer-motion animations.
+### 2.3 Enhanced page transitions
+Add smooth cross-fade transitions between route changes using `framer-motion` `AnimatePresence` at the root layout level.
 
-### Phase 6 — Production hardening
-- Add favicons set: `apple-touch-icon-180.png`, `icon-192.png`, `icon-512.png`, `manifest.webmanifest` (PWA-installable).
-- Clean duplicate assets (`atdb-logo-dark.webp` vs `…CMkcsUAi.webp`) and unused files.
-- Add an `ErrorBoundary` per top-level route segment.
-- Add `noindex` on `/qa`.
-- Run lint + typecheck + format and commit a clean baseline.
-- Final visual smoke walk on mobile (375 × 812) + tablet (768) + desktop (1440).
+**Files:** `src/routes/__root.tsx`, create `src/components/PageTransition.tsx`
+
+### 2.4 Magnetic hover effects on CTA buttons
+Add subtle magnetic cursor-follow effect on primary CTA buttons (hero "Browse Equipment", "Get Quote") for premium desktop UX.
+
+**Files:** Create `src/components/MagneticButton.tsx`, update `src/components/home/HeroSection.tsx`
+
+### 2.5 Parallax depth on hero section
+Add subtle parallax scroll effect on the hero background (moves slower than content) for cinematic depth.
+
+**Files:** `src/components/home/HeroMedia.tsx`
+
+### 2.6 Number counter animation
+Hero stats (26+, 30+, 25, 2) should count up from 0 when scrolled into view.
+
+**Files:** `src/components/home/HeroSection.tsx`
+
+### 2.7 Smooth card hover with spring physics
+Upgrade `card-tilt` and `glass-hover` from CSS transitions to spring-based transforms for more natural feel.
+
+**Files:** `src/styles.css`
 
 ---
 
-## 2. Out of scope (per your instruction "do not change core features or data")
-- I will NOT change the brand voice, project list, "Why ATDB" copy, or the WhatsApp number `+8801712106242`.
-- I will NOT add a backend, contact-form submission, or auth — staying static.
-- I will NOT alter the orange/dark theme — only refine spacing and Bengali type.
+## Phase 3: UI/UX Polish
+
+### 3.1 Navbar scroll animation refinement
+- Add blur intensity increase on scroll
+- Smooth logo size transition with cubic-bezier
+- Active nav link indicator (animated underline, not just color)
+
+**Files:** `src/components/Navbar.tsx`
+
+### 3.2 Mobile menu upgrade
+- Slide-in from right with backdrop blur (currently just drops down)
+- Staggered link animations on open
+
+**Files:** `src/components/Navbar.tsx`
+
+### 3.3 Footer entrance animations
+- Stagger footer columns on scroll-in
+- Social icons with scale-up sequence
+
+**Files:** `src/components/Footer.tsx`
+
+### 3.4 Equipment card hover state
+- Image zoom with slight rotate for 3D feel
+- Gradient overlay shift on hover
+- Action buttons slide up on hover (hidden by default on desktop)
+
+**Files:** `src/pages/Equipment.tsx`
+
+### 3.5 Gallery carousel upgrade
+- Add smooth Ken Burns effect per slide
+- Crossfade with scale transition (not just opacity)
+- Progress bar under dots showing auto-advance timing
+
+**Files:** `src/components/home/HeroGallery.tsx`
+
+### 3.6 Loading skeleton shimmer upgrade
+- More refined shimmer gradient (triple-color)
+- Match actual content layout shapes
+
+**Files:** `src/components/SkeletonShimmer.tsx`
 
 ---
 
-## 3. Two questions before I start
+## Phase 4: Performance & Quality
 
-1. **Support-equipment SKU scheme** — your master list groups support equipment by *type* (e.g. "Honda GQR-350 cutting machines, 2 units"). Should I keep one ID per *line item* with `quantity: "02"` (cleaner; matches PDF), or split into one ID per *physical unit* (`SP-CUT-001A`, `SP-CUT-001B`)?
-2. **Removing fabricated entries** — items like "Robin EY20 Generator", "Lincoln Welding Machine", "Bar Bending Machine", "Honda GX160 Vibrator", "CAT CS54", "CAT Plate Compactor" are NOT in your master list. Confirm I should **remove** them entirely (not just rename).
+### 4.1 Scroll event optimization
+- ScrollProgress uses raw scroll listener -- switch to `requestAnimationFrame` throttle
+- Navbar scroll detection should use same RAF approach
 
-Once you approve and answer the two questions, I'll execute Phases 1 → 6 in one continuous pass and hand back a verified, tonight-ready build.
+**Files:** `src/components/ScrollProgress.tsx`, `src/components/Navbar.tsx`
+
+### 4.2 Image loading optimization
+- Add `fetchPriority="high"` on hero/above-fold images
+- Ensure all below-fold images use `loading="lazy"` and `decoding="async"`
+- Equipment detail gallery: preload next thumbnail
+
+**Files:** Multiple components
+
+### 4.3 Reduce layout shifts
+- Set explicit `width`/`height` or `aspect-ratio` on all images
+- Equipment cards: fixed height for text area
+
+**Files:** Multiple components
+
+---
+
+## Phase 5: Link & Navigation Audit
+
+### 5.1 Verify all internal links
+- Home nav links (/, /equipment, /projects, /about, /contact)
+- Equipment category links (/equipment/{slug})
+- Equipment detail links (/equipment/{category}/{id})
+- Footer links
+- Breadcrumb navigation on detail pages
+
+### 5.2 Verify all external links
+- WhatsApp links (fab, cards, detail, cart checkout)
+- Phone links (tel:)
+- Email links (mailto:)
+- Facebook link
+- Behance credit link
+
+### 5.3 Active state verification
+- Navbar active link highlighting
+- Equipment filter active states
+- Gallery dot indicators
+
+---
+
+## Phase 6: Language Toggle Audit
+
+### 6.1 Verify bilingual strings
+- Every `t("EN", "BN")` call has both strings
+- Bengali font (Hind Siliguri) loads and applies correctly
+- `html.lang-bn` class toggles
+- Language persists on reload (localStorage)
+- All pages render correctly in both languages
+
+### 6.2 Fix potential issues
+- Equipment detail: breadcrumb category labels should be bilingual
+- Cart drawer: all validation messages are bilingual (already done)
+- QA page: hardcoded English strings (acceptable -- internal tool)
+
+---
+
+## Phase 7: Responsive Layout Audit
+
+### 7.1 Mobile (390px viewport -- current user viewport)
+- Navbar hamburger + mobile menu
+- Hero text sizing and padding
+- Equipment cards single column
+- Footer stacking
+- WhatsApp FAB positioning
+- Cart drawer full-width
+
+### 7.2 Tablet (768-1024px)
+- Grid transitions (2-col layouts)
+- Gallery aspect ratio
+- Filter bar layout
+
+### 7.3 Desktop (1280px+)
+- Full grid layouts (3-4 columns)
+- Hover effects active
+- Video autoplay
+
+---
+
+## Technical Details
+
+### New dependencies
+- `lenis` -- smooth scroll library (lightweight, GPU-accelerated)
+
+### Files created
+- `src/components/PageTransition.tsx` -- route transition wrapper
+- `src/components/MagneticButton.tsx` -- magnetic hover CTA
+- `src/components/CountUp.tsx` -- animated number counter
+
+### Files modified (major)
+- `src/components/home/HeroMedia.tsx` -- hydration fix + parallax
+- `src/components/home/HeroSection.tsx` -- magnetic buttons + counter
+- `src/components/home/HeroGallery.tsx` -- Ken Burns + progress bar
+- `src/components/RevealOnScroll.tsx` -- stagger support
+- `src/components/Navbar.tsx` -- enhanced scroll + mobile menu
+- `src/components/ScrollProgress.tsx` -- RAF optimization
+- `src/styles.css` -- spring physics, new animations
+- `src/routes/__root.tsx` -- page transitions
+- `src/pages/Equipment.tsx` -- card hover polish
+- `src/components/SectionDivider.tsx` -- SSR fix
+
+### Estimated scope
+~15-18 file changes, 3 new components, 1 new package. All changes are frontend-only -- no backend or data changes.

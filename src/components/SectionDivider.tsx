@@ -6,12 +6,14 @@ import { useEffect, useRef, useState } from "react";
  * - When scrolled into view, the gradient line draws across from center
  *   outwards and a faint glow fades in.
  * - Honors prefers-reduced-motion (renders the static state).
+ * - SSR-safe: no window access during render.
  */
 export default function SectionDivider({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) {
       setShown(true);
