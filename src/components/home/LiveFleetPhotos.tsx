@@ -40,7 +40,7 @@ function VideoCard({ video }: { video: typeof fleetVideos[0] }) {
   return (
     <div
       ref={wrapRef}
-      className="group relative aspect-video rounded-2xl overflow-hidden glass-card glass-hover col-span-2 sm:col-span-2"
+      className="group relative aspect-video rounded-2xl overflow-hidden glass-card glass-hover col-span-2 md:col-span-2"
     >
       {inView ? (
         <video
