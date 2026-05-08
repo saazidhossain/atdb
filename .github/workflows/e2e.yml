@@ -74,15 +74,25 @@ jobs:
           echo "Preview server failed to start" >&2
           exit 1
 
-      - name: Run smoke E2E (fast lane, strict retries)
+      # ── Smoke lane ────────────────────────────────────────────────────
+      # Runs first. Fails the job immediately if any @smoke spec breaks,
+      # so contributors get a red signal in ~2 min instead of ~15. The
+      # full lane is skipped on smoke failure (default step ordering).
+      - name: Run smoke E2E (fail-fast, strict retries)
+        id: smoke
         env:
           SUITE: smoke
-        run: npx playwright test --grep @smoke
+        run: npm run test:e2e:smoke
 
+      # ── Full lane ─────────────────────────────────────────────────────
+      # Only runs when smoke passed. Lenient retries absorb transient
+      # flake in the long visual-regression / a11y suites without going
+      # red. Reuses the same SUITE / @smoke convention as the npm scripts.
       - name: Run full E2E (lenient retries)
+        if: success() && steps.smoke.conclusion == 'success'
         env:
           SUITE: full
-        run: npx playwright test --grep-invert @smoke
+        run: npm run test:e2e:full
 
       - name: Stop preview server
         if: always()
