@@ -25,7 +25,7 @@ export default function EquipmentCategories() {
               to={`/equipment/${cat.slug}`}
               className="group relative overflow-hidden rounded-2xl glass-card glass-hover aspect-[4/3] h-full flex"
             >
-              <img src={cat.image} alt={cat.label} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img src={cat.image} alt={cat.label} loading={i < 3 ? "eager" : "lazy"} decoding="async" fetchPriority={i < 3 ? "high" : "auto"} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative h-full w-full flex flex-col justify-end p-6 min-w-0">
