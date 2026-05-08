@@ -165,8 +165,7 @@ export default function HeroMedia() {
         alt=""
         aria-hidden
         decoding="async"
-        // @ts-expect-error fetchpriority is valid HTML, not yet in React types everywhere
-        fetchpriority="high"
+        fetchPriority="high"
         loading="eager"
         className="absolute inset-0 h-full w-full object-cover object-center"
         style={{ zIndex: 0, ...parallaxStyle }}

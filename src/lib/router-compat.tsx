@@ -4,7 +4,7 @@ import {
   useParams as tUseParams,
   useLocation as tUseLocation,
 } from "@tanstack/react-router";
-import { forwardRef, type AnchorHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useMemo, type AnchorHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -67,13 +67,16 @@ export function useParams<
 
 export function useLocation() {
   const loc = tUseLocation();
-  return {
-    pathname: loc.pathname,
-    search: loc.searchStr,
-    hash: loc.hash,
-    state: loc.state,
-    key: "default",
-  };
+  return useMemo(
+    () => ({
+      pathname: loc.pathname,
+      search: loc.searchStr,
+      hash: loc.hash,
+      state: loc.state,
+      key: "default",
+    }),
+    [loc.pathname, loc.searchStr, loc.hash, loc.state],
+  );
 }
 
 type NavArg = string | number | { to?: string; replace?: boolean; search?: any; params?: any };
