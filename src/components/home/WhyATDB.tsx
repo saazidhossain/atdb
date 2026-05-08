@@ -1,4 +1,4 @@
-import { Shield, Zap, Phone, DollarSign, Milestone } from "lucide-react";
+import { Shield, Zap, Phone, DollarSign } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 
 export default function WhyATDB() {
