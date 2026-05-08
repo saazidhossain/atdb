@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { equipmentData, getWhatsAppRentUrl } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
 import SmartImage from "@/components/SmartImage";
+import { trackEvent } from "@/lib/analytics";
 
 export default function FeaturedEquipment() {
   const { t } = useLang();
@@ -16,7 +17,11 @@ export default function FeaturedEquipment() {
             <p className="eyebrow mb-2 sm:mb-3">{t("Featured Equipment", "ফিচার্ড ইকুইপমেন্ট")}</p>
             <h2 className="text-[1.625rem] sm:text-3xl md:text-4xl font-bold font-display leading-[1.15] tracking-tight text-balance">{t("Flagship machines, ready to mobilise.", "ফ্ল্যাগশিপ মেশিন, মোবিলাইজে প্রস্তুত।")}</h2>
           </div>
-          <Link to="/equipment" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors">
+          <Link
+            to="/equipment"
+            onClick={() => trackEvent("view_full_fleet_click", { location: "home_featured_equipment" })}
+            className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors"
+          >
             {t("View full fleet", "পুরো ফ্লিট দেখুন")} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

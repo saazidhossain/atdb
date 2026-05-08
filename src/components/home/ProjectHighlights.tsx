@@ -3,6 +3,7 @@ import { ArrowRight, MapPin } from "lucide-react";
 import { projectsData } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
 import SmartImage from "@/components/SmartImage";
+import { trackEvent } from "@/lib/analytics";
 
 export default function ProjectHighlights() {
   const { t, lang } = useLang();
@@ -15,7 +16,11 @@ export default function ProjectHighlights() {
             <p className="eyebrow mb-2 sm:mb-3">{t("Project Highlights", "প্রজেক্ট হাইলাইটস")}</p>
             <h2 className="text-[1.625rem] sm:text-3xl md:text-4xl font-bold font-display leading-[1.15] tracking-tight text-balance">{t("Powering Bangladesh's biggest builds.", "বাংলাদেশের সবচেয়ে বড় নির্মাণে শক্তি যোগাচ্ছি।")}</h2>
           </div>
-          <Link to="/projects" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors">
+          <Link
+            to="/projects"
+            onClick={() => trackEvent("view_all_projects_click", { location: "home_project_highlights" })}
+            className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors"
+          >
             {t("View all projects", "সব প্রজেক্ট দেখুন")} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
