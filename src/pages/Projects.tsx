@@ -27,7 +27,7 @@ export default function Projects() {
           <p className="text-white/55 mt-5 max-w-2xl leading-relaxed">{t("M/S ATDB Trade International has successfully delivered a wide spectrum of heavy engineering, civil construction and infrastructure works across Bangladesh. Below is a categorised view of our major executed projects.", "মেসার্স ATDB ট্রেড ইন্টারন্যাশনাল সারা বাংলাদেশে বিভিন্ন ভারী প্রকৌশল, সিভিল কন্সট্রাকশন ও অবকাঠামোগত কাজ সফলভাবে সম্পন্ন করেছে। আমাদের উল্লেখযোগ্য সম্পন্নকৃত প্রজেক্টসমূহ ক্যাটাগরি অনুযায়ী নিচে দেওয়া হলো।")}</p>
           <div className="mt-8 flex flex-wrap gap-2.5">
             {groups.map((g, i) => (
-              <a key={g.type} href={`#group-${i}`} className="px-4 py-2 rounded-full glass text-xs font-medium text-white/80 hover:text-orange-300 hover:bg-white/10 transition-colors border border-white/10">
+              <a key={g.type} href={`#group-${i}`} className="max-w-full px-4 py-2 rounded-2xl glass text-xs font-medium text-white/80 hover:text-orange-300 hover:bg-white/10 transition-colors border border-white/10 whitespace-normal break-words leading-snug text-left">
                 {i + 1}. {lang === "bn" ? g.bn : g.en}
               </a>
             ))}
@@ -49,7 +49,7 @@ export default function Projects() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
                   </div>
                   <div className="p-5 flex-1 flex flex-col">
-                    <div className="flex items-center gap-1.5 text-orange-400 text-[11px] font-semibold uppercase tracking-wider"><MapPin className="w-3 h-3" />{lang === "bn" ? p.locationBn : p.location}</div>
+                    <div className="flex items-start gap-1.5 text-orange-400 text-[11px] font-semibold uppercase tracking-wider min-w-0"><MapPin className="w-3 h-3 mt-0.5 shrink-0" /><span className="min-w-0 break-words leading-snug">{lang === "bn" ? p.locationBn : p.location}</span></div>
                     <h3 className="mt-2 font-semibold text-white font-display group-hover:text-orange-400 transition-colors leading-snug">{lang === "bn" ? p.titleBn : p.title}</h3>
                     <p className="mt-2 text-sm text-white/55 leading-relaxed">{lang === "bn" ? p.descriptionBn : p.description}</p>
                   </div>

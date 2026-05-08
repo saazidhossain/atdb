@@ -33,8 +33,8 @@ export default function Contact() {
               <Phone className="w-8 h-8 text-orange-400" />
             </div>
             <h3 className="text-lg font-semibold mb-2 font-display">{t("Phone", "ফোন")}</h3>
-            <p className="text-white/70 text-sm">+8801712106242 <span className="text-white/40">· {t("Proprietor", "মালিক")}</span></p>
-            <p className="text-white/70 text-sm mt-1">+8801816666067 <span className="text-white/40">· {t("CEO", "সিইও")}</span></p>
+            <p className="text-white/70 text-sm break-all">+8801712106242 <span className="text-white/40">· {t("Proprietor", "মালিক")}</span></p>
+            <p className="text-white/70 text-sm mt-1 break-all">+8801816666067 <span className="text-white/40">· {t("CEO", "সিইও")}</span></p>
           </a>
 
           <a href="mailto:saifulaapi@gmail.com" className="glass-card rounded-2xl p-8 glass-hover card-tilt group text-center">
@@ -42,7 +42,7 @@ export default function Contact() {
               <Mail className="w-8 h-8 text-blue-400" />
             </div>
             <h3 className="text-lg font-semibold mb-2 font-display">{t("Email", "ইমেইল")}</h3>
-            <p className="text-white/50 text-sm">saifulaapi@gmail.com</p>
+            <p className="text-white/50 text-sm break-all">saifulaapi@gmail.com</p>
           </a>
 
           <a href="https://www.facebook.com/atdbtrade" target="_blank" rel="noopener noreferrer" className="glass-card rounded-2xl p-8 glass-hover card-tilt group text-center">
@@ -62,9 +62,9 @@ export default function Contact() {
           ].map(office => (
             <div key={office.name} className="glass-card rounded-2xl p-6 glass-hover card-tilt flex gap-4">
               <MapPin className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
-              <div>
+              <div className="min-w-0">
                 <h3 className="font-semibold mb-1 font-display">{office.name}</h3>
-                <p className="text-white/50 text-sm leading-relaxed">{office.address}</p>
+                <p className="text-white/50 text-sm leading-relaxed break-words">{office.address}</p>
               </div>
             </div>
           ))}
