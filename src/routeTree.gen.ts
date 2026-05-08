@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EquipmentIndexRouteImport } from './routes/equipment.index'
+import { Route as EquipmentCategoryIndexRouteImport } from './routes/equipment.$category.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const EquipmentIndexRoute = EquipmentIndexRouteImport.update({
   path: '/equipment/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EquipmentCategoryIndexRoute = EquipmentCategoryIndexRouteImport.update({
+  id: '/equipment/$category/',
+  path: '/equipment/$category/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/equipment/': typeof EquipmentIndexRoute
+  '/equipment/$category/': typeof EquipmentCategoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/equipment': typeof EquipmentIndexRoute
+  '/equipment/$category': typeof EquipmentCategoryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/equipment/': typeof EquipmentIndexRoute
+  '/equipment/$category/': typeof EquipmentCategoryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/equipment/'
+  fullPaths: '/' | '/equipment/' | '/equipment/$category/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/equipment'
-  id: '__root__' | '/' | '/equipment/'
+  to: '/' | '/equipment' | '/equipment/$category'
+  id: '__root__' | '/' | '/equipment/' | '/equipment/$category/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EquipmentIndexRoute: typeof EquipmentIndexRoute
+  EquipmentCategoryIndexRoute: typeof EquipmentCategoryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EquipmentIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/equipment/$category/': {
+      id: '/equipment/$category/'
+      path: '/equipment/$category'
+      fullPath: '/equipment/$category/'
+      preLoaderRoute: typeof EquipmentCategoryIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EquipmentIndexRoute: EquipmentIndexRoute,
+  EquipmentCategoryIndexRoute: EquipmentCategoryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
