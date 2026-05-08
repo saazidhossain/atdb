@@ -26,15 +26,33 @@ export default function HeroGallery() {
 
   const [idx, setIdx] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
   const total = slides.length;
 
   useEffect(() => {
     if (paused || total === 0) return;
     const cur = slides[idx];
-    const delay = cur?.kind === "video" ? 8000 : 4500;
-    const t = setTimeout(() => setIdx(i => (i + 1) % total), delay);
-    return () => clearTimeout(t);
+    const duration = cur?.kind === "video" ? 8000 : 4500;
+    const interval = 50; // update progress every 50ms
+    let elapsed = 0;
+
+    const timer = setInterval(() => {
+      elapsed += interval;
+      setProgress((elapsed / duration) * 100);
+      if (elapsed >= duration) {
+        setIdx(i => (i + 1) % total);
+        setProgress(0);
+      }
+    }, interval);
+
+    return () => clearInterval(timer);
   }, [idx, paused, slides, total]);
+
+  // Reset progress on manual navigation
+  const goTo = (i: number) => {
+    setIdx(i);
+    setProgress(0);
+  };
 
   if (!total) return null;
   const cur = slides[idx];
@@ -54,7 +72,7 @@ export default function HeroGallery() {
           <button
             onClick={() => setPaused(p => !p)}
             aria-label={paused ? t("Play", "চালান") : t("Pause", "বিরতি")}
-            className="hidden sm:flex w-10 h-10 rounded-full glass hover:bg-white/15 items-center justify-center text-white"
+            className="hidden sm:flex w-10 h-10 rounded-full glass hover:bg-white/15 items-center justify-center text-white transition-colors"
           >
             {paused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
           </button>
@@ -62,9 +80,6 @@ export default function HeroGallery() {
 
         <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden glass-card group">
           {slides.map((s, i) => {
-            // Render only the current slide ± 1 neighbour so we don't fire 14 image
-            // requests on first paint. Keeps layout stable (absolute-positioned)
-            // and prevents reflow when language or breakpoint changes.
             const dist = Math.min(
               Math.abs(i - idx),
               total - Math.abs(i - idx)
@@ -73,7 +88,9 @@ export default function HeroGallery() {
             return (
               <div
                 key={i}
-                className={`absolute inset-0 transition-opacity duration-1000 ${i === idx ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                className={`absolute inset-0 transition-all duration-1000 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${
+                  i === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
+                }`}
               >
                 {shouldMount && (
                   s.kind === "video" && i === idx ? (
@@ -96,7 +113,7 @@ export default function HeroGallery() {
                       loading={i === 0 ? "eager" : "lazy"}
                       decoding={i === 0 ? "sync" : "async"}
                       fetchPriority={i === 0 ? "high" : "low"}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover ${i === idx ? "animate-hero-kenburns" : ""}`}
                     />
                   )
                 )}
@@ -121,7 +138,7 @@ export default function HeroGallery() {
             {cur.id && cur.category && (
               <Link
                 to={`/equipment/${cur.category}/${cur.id}`}
-                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500 hover:bg-orange-400 text-white text-xs font-semibold transition-colors shadow-lg shadow-orange-500/30"
+                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-500 hover:bg-orange-400 text-white text-xs font-semibold transition-colors shadow-lg shadow-orange-500/30 hover:-translate-y-0.5 active:translate-y-0"
               >
                 {t("View Details", "বিস্তারিত")}
               </Link>
@@ -129,28 +146,41 @@ export default function HeroGallery() {
           </div>
 
           <button
-            onClick={() => setIdx((idx - 1 + total) % total)}
+            onClick={() => goTo((idx - 1 + total) % total)}
             aria-label={t("Previous", "পূর্ববর্তী")}
             className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur hover:bg-black/60 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity z-20"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
-            onClick={() => setIdx((idx + 1) % total)}
+            onClick={() => goTo((idx + 1) % total)}
             aria-label={t("Next", "পরবর্তী")}
             className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur hover:bg-black/60 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity z-20"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
 
+          {/* Dots with progress indicator */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
             {slides.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setIdx(i)}
+                onClick={() => goTo(i)}
                 aria-label={`Slide ${i + 1}`}
-                className={`h-1 rounded-full transition-all ${i === idx ? "w-6 bg-orange-400" : "w-1.5 bg-white/40 hover:bg-white/70"}`}
-              />
+                className={`h-1 rounded-full transition-all relative overflow-hidden ${
+                  i === idx ? "w-8 bg-white/20" : "w-1.5 bg-white/40 hover:bg-white/70"
+                }`}
+              >
+                {i === idx && (
+                  <span
+                    className="absolute inset-0 bg-orange-400 rounded-full origin-left"
+                    style={{
+                      transform: `scaleX(${progress / 100})`,
+                      transition: "transform 50ms linear",
+                    }}
+                  />
+                )}
+              </button>
             ))}
           </div>
         </div>
