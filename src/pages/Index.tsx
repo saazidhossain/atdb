@@ -8,7 +8,7 @@ import EquipmentCategories from "@/components/home/EquipmentCategories";
 import FeaturedEquipment from "@/components/home/FeaturedEquipment";
 import LiveFleetPhotos from "@/components/home/LiveFleetPhotos";
 import ProjectHighlights from "@/components/home/ProjectHighlights";
-import StandardsStrip from "@/components/home/StandardsStrip";
+// StandardsStrip moved to About page
 import ScrollProgress from "@/components/ScrollProgress";
 import PagePreloader from "@/components/PagePreloader";
 import SkeletonShimmer from "@/components/SkeletonShimmer";
@@ -72,8 +72,6 @@ export default function Index() {
       <SectionDivider />
       <div className="cv-auto">
         <RevealOnScroll><ProjectHighlights /></RevealOnScroll>
-        <SectionDivider />
-        <RevealOnScroll className="block w-full max-w-full overflow-hidden"><StandardsStrip /></RevealOnScroll>
       </div>
       <SectionDivider />
       <RevealOnScroll><CTASection /></RevealOnScroll>
