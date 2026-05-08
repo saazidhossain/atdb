@@ -22,6 +22,9 @@ export default function FeaturedEquipment() {
                 <img
                   src={eq.realPhotos?.[0] || eq.image}
                   alt={eq.name}
+                  width={800}
+                  height={600}
+                  decoding="async"
                   className="image-polish w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   loading="lazy"
                 />
