@@ -11,7 +11,8 @@ export default function WhatsAppFAB() {
       rel="noopener noreferrer"
       aria-label={label}
       title={label}
-      className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 w-14 h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-2xl shadow-green-600/30 hover:bg-green-500 hover:shadow-green-500/40 hover:scale-105 active:scale-95 transition-all animate-pulse-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background group"
+      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)" }}
+      className="fixed right-5 sm:right-6 z-50 w-14 h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-2xl shadow-green-600/30 hover:bg-green-500 hover:shadow-green-500/40 hover:scale-105 active:scale-95 transition-all animate-pulse-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background group"
     >
       <span className="sr-only">{label}</span>
       <svg aria-hidden="true" className="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
