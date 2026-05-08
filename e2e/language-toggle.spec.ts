@@ -86,7 +86,7 @@ test.describe("Language toggle (EN ↔ BN)", () => {
     });
   }
 
-  test("language persists across navigation", async ({ page }) => {
+  test("@smoke language persists across navigation", async ({ page }) => {
     await page.goto("/");
     await waitForApp(page);
 

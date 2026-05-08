@@ -31,7 +31,7 @@ async function waitForApp(page: Page) {
 // ═══════════════════════════════════════════════════════════════════════
 // 1. Every route loads without error
 // ═══════════════════════════════════════════════════════════════════════
-test.describe("Page routes load correctly", () => {
+test.describe("@smoke Page routes load correctly", () => {
   for (const route of ROUTES) {
     test(`${route.path} renders with correct title`, async ({ page }) => {
       const response = await page.goto(route.path);
@@ -56,7 +56,7 @@ test.describe("Page routes load correctly", () => {
 // ═══════════════════════════════════════════════════════════════════════
 // 2. Navbar links all work
 // ═══════════════════════════════════════════════════════════════════════
-test.describe("Navigation links", () => {
+test.describe("@smoke Navigation links", () => {
   test("desktop nav contains all links and they navigate correctly", async ({ page }) => {
     await page.goto("/");
     await waitForApp(page);
@@ -130,7 +130,7 @@ test.describe("Equipment pages", () => {
 // ═══════════════════════════════════════════════════════════════════════
 // 4. 404 page for unknown routes
 // ═══════════════════════════════════════════════════════════════════════
-test("unknown route shows 404 / not-found", async ({ page }) => {
+test("@smoke unknown route shows 404 / not-found", async ({ page }) => {
   await page.goto("/this-does-not-exist-xyz");
   await waitForApp(page);
 
