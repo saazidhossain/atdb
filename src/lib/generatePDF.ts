@@ -37,14 +37,17 @@ const FOOTER_H = 14;       // mm
 
 const STR = {
   subtitle: "Heavy Equipment Rental & 1st-Class Civil Contractor  ·  Est. 2000",
-  addr:     "Corporate: Dhaka  ·  Branch: Tangail  ·  +880 1712-106242  ·  atdbtrade.com",
+  addr:     "Corporate: House #319 (8F), Lane #8, East Kazi Para, Kafrul, Dhaka-1216  ·  Branch: Tangail-1900",
   sheet:    "EQUIPMENT SPECIFICATION SHEET",
+  refLabel: "Quotation Ref:",
   spec: "Specification", detail: "Detail",
-  category: "Category", brand: "Brand", model: "Model",
+  category: "Category", brand: "Brand", model: "Model / Serial",
   capacity: "Lifting / Operating Capacity",
   origin: "Country of Origin", year: "Year of Manufacture",
   fuel: "Engine / Fuel Type", qty: "Quantity Available",
-  notes: "Type / Configuration", asset: "Asset ID", units: "Unit(s)",
+  notes: "Type / Configuration", asset: "Asset ID",
+  certLabel: "Inspection Status",
+  certValue: "Certified & Operator-Ready",
   galleryHeading: "Equipment Gallery — Multiple Angles",
   galleryNoneNote: "Visual reference image (high-resolution photography available on request).",
   descHeading: "About This Equipment",
@@ -52,17 +55,31 @@ const STR = {
     "Inspected, maintained and operator-ready unit from ATDB Trade International's owned fleet. " +
     "Available for short-term and long-term rental across Bangladesh with experienced operators, " +
     "site mobilisation and 24/7 maintenance backup.",
-  ctaHeading: "Ready to mobilise this unit?",
+  ctaHeading: "Request a Quotation",
   ctaBody:
     "Contact our rental desk for availability, daily/weekly/monthly pricing, operator scope, fuel " +
     "terms and site mobilisation. Quotes are typically issued the same business day.",
   contactWa:    "WhatsApp:  +880 1712-106242",
+  contactPhone: "Phone:     +880 1816-666067",
   contactEmail: "Email:     saifulaapi@gmail.com",
   contactWeb:   "Website:   www.atdbtrade.com",
-  footerLeft:   "© ATDB Trade International",
+  footerLeft:   "© ATDB Trade International  ·  Confidential",
   pageOf: (a: number, b: number) => `Page ${a} of ${b}`,
   generated: "Generated",
 } as const;
+
+/** Format quantity: "02" → "2 Units", "01" → "1 Unit" */
+function fmtQty(q: string): string {
+  const n = parseInt(q, 10) || 1;
+  return `${n} ${n === 1 ? "Unit" : "Units"}`;
+}
+
+/** Generate a short quotation reference: ATDB-CR-001-20260508 */
+function makeRef(id: string): string {
+  const d = new Date();
+  const ds = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+  return `${id}-${ds}`;
+}
 
 // ─── Image loader → PNG data URL (jsPDF can't embed WEBP reliably) ────
 async function loadImage(
