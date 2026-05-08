@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as QaRouteImport } from './routes/qa'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
@@ -17,6 +18,11 @@ import { Route as EquipmentIndexRouteImport } from './routes/equipment.index'
 import { Route as EquipmentCategoryIndexRouteImport } from './routes/equipment.$category.index'
 import { Route as EquipmentCategoryIdRouteImport } from './routes/equipment.$category.$id'
 
+const QaRoute = QaRouteImport.update({
+  id: '/qa',
+  path: '/qa',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/projects': typeof ProjectsRoute
+  '/qa': typeof QaRoute
   '/equipment/': typeof EquipmentIndexRoute
   '/equipment/$category/$id': typeof EquipmentCategoryIdRoute
   '/equipment/$category/': typeof EquipmentCategoryIndexRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/projects': typeof ProjectsRoute
+  '/qa': typeof QaRoute
   '/equipment': typeof EquipmentIndexRoute
   '/equipment/$category/$id': typeof EquipmentCategoryIdRoute
   '/equipment/$category': typeof EquipmentCategoryIndexRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/projects': typeof ProjectsRoute
+  '/qa': typeof QaRoute
   '/equipment/': typeof EquipmentIndexRoute
   '/equipment/$category/$id': typeof EquipmentCategoryIdRoute
   '/equipment/$category/': typeof EquipmentCategoryIndexRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/projects'
+    | '/qa'
     | '/equipment/'
     | '/equipment/$category/$id'
     | '/equipment/$category/'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/projects'
+    | '/qa'
     | '/equipment'
     | '/equipment/$category/$id'
     | '/equipment/$category'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/projects'
+    | '/qa'
     | '/equipment/'
     | '/equipment/$category/$id'
     | '/equipment/$category/'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   ProjectsRoute: typeof ProjectsRoute
+  QaRoute: typeof QaRoute
   EquipmentIndexRoute: typeof EquipmentIndexRoute
   EquipmentCategoryIdRoute: typeof EquipmentCategoryIdRoute
   EquipmentCategoryIndexRoute: typeof EquipmentCategoryIndexRoute
@@ -123,6 +136,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/qa': {
+      id: '/qa'
+      path: '/qa'
+      fullPath: '/qa'
+      preLoaderRoute: typeof QaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects': {
       id: '/projects'
       path: '/projects'
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   ProjectsRoute: ProjectsRoute,
+  QaRoute: QaRoute,
   EquipmentIndexRoute: EquipmentIndexRoute,
   EquipmentCategoryIdRoute: EquipmentCategoryIdRoute,
   EquipmentCategoryIndexRoute: EquipmentCategoryIndexRoute,

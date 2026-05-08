@@ -90,7 +90,7 @@ export default function EquipmentPage() {
               <div className="p-5 flex-1 flex flex-col">
                 <span className="text-[10px] font-mono text-white/40 mb-1">{eq.id}</span>
                 <Link to={`/equipment/${eq.category}/${eq.id}`} className="text-lg font-semibold text-white hover:text-orange-400 transition-colors">{eq.name}</Link>
-                <p className="text-sm text-white/40 mt-1">{eq.capacity} · {eq.origin} · {eq.year}</p>
+                <p className="text-sm text-white/40 mt-1">{eq.capacity} · {eq.origin} · {eq.year || "—"}</p>
                 <div className="mt-auto pt-4 flex items-center gap-2">
                   <a
                     href={getWhatsAppRentUrl(eq.name, eq.id, eq.capacity)}

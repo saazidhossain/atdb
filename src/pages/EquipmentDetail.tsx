@@ -188,7 +188,7 @@ export default function EquipmentDetail() {
                 {[
                   { icon: Wrench, label: t("Capacity", "ক্ষমতা"), value: equipment.capacity },
                   { icon: MapPin, label: t("Origin", "উৎপত্তি"), value: equipment.origin },
-                  { icon: Calendar, label: t("Year", "সাল"), value: String(equipment.year) },
+                  { icon: Calendar, label: t("Year", "সাল"), value: equipment.year ? String(equipment.year) : "—" },
                   { icon: Fuel, label: t("Fuel", "জ্বালানি"), value: equipment.fuel },
                 ].map(spec => (
                   <div key={spec.label} className="glass-card rounded-xl p-4">
@@ -216,7 +216,7 @@ export default function EquipmentDetail() {
                       { k: t("Lifting / Operating Capacity", "লিফটিং / অপারেটিং ক্ষমতা"), v: equipment.capacity },
                       { k: t("Engine / Power", "ইঞ্জিন / পাওয়ার"), v: `${equipment.fuel}${equipment.notes ? ` · ${equipment.notes}` : ""}` },
                       { k: t("Country of Origin", "উৎপত্তির দেশ"), v: equipment.origin },
-                      { k: t("Year of Manufacture", "নির্মাণ সাল"), v: String(equipment.year) },
+                      { k: t("Year of Manufacture", "নির্মাণ সাল"), v: equipment.year ? String(equipment.year) : "—" },
                       { k: t("Brand", "ব্র্যান্ড"), v: equipment.brand },
                       { k: t("Asset ID", "অ্যাসেট আইডি"), v: equipment.id },
                       { k: t("Quantity Available", "উপলব্ধ পরিমাণ"), v: `${equipment.quantity} ${t("Unit(s)", "ইউনিট")}` },
