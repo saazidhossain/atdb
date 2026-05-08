@@ -1,0 +1,96 @@
+import { describe, it, expect } from "vitest";
+import { equipmentData, equipmentCategories } from "./equipment";
+
+describe("Equipment data integrity", () => {
+  it("has no duplicate IDs", () => {
+    const ids = equipmentData.map((e) => e.id);
+    expect(ids.length).toBe(new Set(ids).size);
+  });
+
+  it("every item has a valid origin (not empty)", () => {
+    for (const e of equipmentData) {
+      expect(e.origin.trim().length, `${e.id} origin is empty`).toBeGreaterThan(0);
+    }
+  });
+
+  it("every item has a non-empty model", () => {
+    for (const e of equipmentData) {
+      expect(e.model.trim().length, `${e.id} model is empty`).toBeGreaterThan(0);
+    }
+  });
+
+  it("year is 0 (unknown) or a realistic 4-digit year", () => {
+    for (const e of equipmentData) {
+      expect(
+        e.year === 0 || (e.year >= 1990 && e.year <= new Date().getFullYear() + 1),
+        `${e.id} year ${e.year} is out of range`,
+      ).toBe(true);
+    }
+  });
+
+  it('quantity is a zero-padded string like "01","02",…', () => {
+    for (const e of equipmentData) {
+      expect(e.quantity, `${e.id} quantity`).toMatch(/^0[1-9]$|^[1-9][0-9]$/);
+    }
+  });
+
+  it("every item has a non-empty image path", () => {
+    for (const e of equipmentData) {
+      expect(e.image.length, `${e.id} image missing`).toBeGreaterThan(0);
+    }
+  });
+
+  it("category counts match actual data", () => {
+    for (const cat of equipmentCategories) {
+      const items = equipmentData.filter((e) => e.category === cat.slug);
+      expect(items.length, `${cat.slug} lineItems`).toBe(cat.lineItems);
+    }
+  });
+
+  // Snapshot: expected items per the ATDB Profile PDF
+  const EXPECTED = {
+    cranes: { ids: ["ATDB-CR-001","ATDB-CR-002","ATDB-CR-003","ATDB-CR-004","ATDB-CR-005","ATDB-CR-006","ATDB-CR-007"], count: 7 },
+    rollers: { ids: ["ATDB-RR-001","ATDB-RR-002","ATDB-RR-003","ATDB-RR-004","ATDB-RR-005","ATDB-RR-006","ATDB-RR-007","ATDB-RR-008","ATDB-RR-009"], count: 9 },
+    excavators: { ids: ["ATDB-EX-001","ATDB-EX-002","ATDB-EX-003"], count: 3 },
+    loaders: { ids: ["ATDB-LD-001","ATDB-LD-002","ATDB-LD-003"], count: 3 },
+    support: { ids: ["ATDB-SP-001","ATDB-SP-002","ATDB-SP-003","ATDB-SP-004","ATDB-SP-005","ATDB-SP-006","ATDB-SP-007","ATDB-SP-008","ATDB-SP-009","ATDB-SP-010"], count: 10 },
+  } as const;
+
+  for (const [slug, spec] of Object.entries(EXPECTED)) {
+    it(`${slug}: has exactly ${spec.count} line items with correct IDs`, () => {
+      const items = equipmentData.filter((e) => e.category === slug);
+      expect(items.length).toBe(spec.count);
+      expect(items.map((e) => e.id).sort()).toEqual([...spec.ids].sort());
+    });
+  }
+
+  // Key fields from ATDB Profile that were previously wrong
+  it("RR-007 origin is England, model is GNT 3367", () => {
+    const item = equipmentData.find((e) => e.id === "ATDB-RR-007")!;
+    expect(item.origin).toBe("England");
+    expect(item.model).toBe("GNT 3367");
+  });
+
+  it("RR-008 quantity is 02 (two HV60ST units)", () => {
+    expect(equipmentData.find((e) => e.id === "ATDB-RR-008")!.quantity).toBe("02");
+  });
+
+  it("SP-004 year is 2019", () => {
+    expect(equipmentData.find((e) => e.id === "ATDB-SP-004")!.year).toBe(2019);
+  });
+
+  it("SP-009 year is 2017, model includes 3900/HSD", () => {
+    const item = equipmentData.find((e) => e.id === "ATDB-SP-009")!;
+    expect(item.year).toBe(2017);
+    expect(item.model).toContain("3900/HSD");
+  });
+
+  it("SP-010 (Power Trowel) exists with correct data", () => {
+    const item = equipmentData.find((e) => e.id === "ATDB-SP-010")!;
+    expect(item).toBeDefined();
+    expect(item.brand).toBe("Honda");
+    expect(item.model).toBe("HZRH50");
+    expect(item.year).toBe(2017);
+    expect(item.quantity).toBe("02");
+  });
+});
