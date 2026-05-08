@@ -46,14 +46,33 @@ export default function HeroSection() {
           )}
         </p>
 
-        <div className="mt-8 sm:mt-10 md:mt-12 flex flex-col xs:flex-row sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 animate-fade-in" style={{ animationDelay: "800ms", animationFillMode: "both" }}>
-          <Link to="/equipment" className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-7 py-3.5 rounded-full bg-orange-500 hover:bg-orange-400 text-white font-semibold text-[13px] sm:text-sm tracking-wide transition-all shadow-lg shadow-orange-500/30 hover:shadow-orange-400/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        {/*
+          CTA cluster — alignment rules:
+          • <480px : single column, both buttons full-width, equal min-height.
+          • ≥480px : two columns side-by-side, equal width via 1fr 1fr,
+                    wrap to stack only if labels truly overflow.
+          • ≥640px : auto-width pills, left-aligned, baseline shared.
+          Buttons share min-height + base classes so they align pixel-perfect.
+        */}
+        <div
+          className="mt-8 sm:mt-10 md:mt-12 grid w-full max-w-md grid-cols-1 gap-3 xs:grid-cols-2 sm:flex sm:max-w-none sm:flex-wrap sm:items-stretch sm:gap-4 animate-fade-in"
+          style={{ animationDelay: "800ms", animationFillMode: "both" }}
+        >
+          <Link
+            to="/equipment"
+            className="group inline-flex min-h-[3rem] w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-orange-500 px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5 hover:bg-orange-400 hover:shadow-orange-400/40 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto sm:px-7 sm:text-sm"
+          >
             {t("BROWSE EQUIPMENT", "ইকুইপমেন্ট দেখুন")}
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-          <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-7 py-3.5 rounded-full glass-strong hover:border-white/25 text-white font-semibold text-[13px] sm:text-sm tracking-wide transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inset-0 rounded-full bg-green-400 opacity-75 animate-ping" />
+          <a
+            href={getWhatsAppQuoteUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glass-strong inline-flex min-h-[3rem] w-full items-center justify-center gap-2 whitespace-nowrap rounded-full px-6 py-3.5 text-[13px] font-semibold tracking-wide text-white transition-all hover:-translate-y-0.5 hover:border-white/25 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:w-auto sm:px-7 sm:text-sm"
+          >
+            <span className="relative flex h-2 w-2 shrink-0">
+              <span className="absolute inset-0 animate-ping rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
             </span>
             {t("WHATSAPP A QUOTE", "হোয়াটসঅ্যাপে কোটেশন")}
