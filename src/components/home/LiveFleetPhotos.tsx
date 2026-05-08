@@ -208,6 +208,7 @@ export default function LiveFleetPhotos() {
                   alt={`${photo.name} ${photo.source === "real" ? "real current condition" : "equipment visual"}`}
                   width="600"
                   height="600"
+                  sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
                   className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${photo.source === "real" ? "image-polish" : "image-polish-strong"}`}
                   loading="lazy"
                   decoding="async"
