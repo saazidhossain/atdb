@@ -57,17 +57,23 @@ export default function Index() {
       <SectionDivider />
       <RevealOnScroll><HeroGallery /></RevealOnScroll>
       <SectionDivider />
-      <RevealOnScroll><EquipmentCategories /></RevealOnScroll>
+      <div className="cv-auto">
+        <RevealOnScroll><EquipmentCategories /></RevealOnScroll>
+        <SectionDivider />
+        <RevealOnScroll><FeaturedEquipment /></RevealOnScroll>
+      </div>
       <SectionDivider />
-      <RevealOnScroll><FeaturedEquipment /></RevealOnScroll>
+      <div className="cv-auto">
+        <RevealOnScroll><LiveFleetPhotos /></RevealOnScroll>
+        <SectionDivider />
+        <RevealOnScroll><WhyATDB /></RevealOnScroll>
+      </div>
       <SectionDivider />
-      <RevealOnScroll><LiveFleetPhotos /></RevealOnScroll>
-      <SectionDivider />
-      <RevealOnScroll><WhyATDB /></RevealOnScroll>
-      <SectionDivider />
-      <RevealOnScroll><ProjectHighlights /></RevealOnScroll>
-      <SectionDivider />
-      <RevealOnScroll className="block w-full max-w-full overflow-hidden"><StandardsStrip /></RevealOnScroll>
+      <div className="cv-auto">
+        <RevealOnScroll><ProjectHighlights /></RevealOnScroll>
+        <SectionDivider />
+        <RevealOnScroll className="block w-full max-w-full overflow-hidden"><StandardsStrip /></RevealOnScroll>
+      </div>
       <SectionDivider />
       <RevealOnScroll><CTASection /></RevealOnScroll>
       <Footer />
