@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, type MouseEvent, type PointerEvent } from "react";
 import { Link, useLocation } from "@/lib/router-compat";
 import { Menu, X, Phone, Mail, Globe } from "lucide-react";
 import { getWhatsAppQuoteUrl } from "@/data/equipment";
@@ -21,6 +21,7 @@ export default function Navbar() {
   const location = useLocation();
   const { lang, setLang, t } = useLang();
   const rafRef = useRef(0);
+  const ignoreNextClickRef = useRef(false);
 
   // RAF-throttled scroll detection
   const onScroll = useCallback(() => {
@@ -39,6 +40,30 @@ export default function Navbar() {
   }, [onScroll]);
 
   useEffect(() => { setIsOpen(false); }, [location.pathname]);
+
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+
+  const toggleMenu = useCallback(() => {
+    setIsOpen(open => !open);
+  }, []);
+
+  const handleMenuPointerDown = useCallback((event: PointerEvent<HTMLButtonElement>) => {
+    if (event.pointerType === "mouse") return;
+    event.preventDefault();
+    ignoreNextClickRef.current = true;
+    toggleMenu();
+    window.setTimeout(() => {
+      ignoreNextClickRef.current = false;
+    }, 400);
+  }, [toggleMenu]);
+
+  const handleMenuClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
+    if (ignoreNextClickRef.current) {
+      event.preventDefault();
+      return;
+    }
+    toggleMenu();
+  }, [toggleMenu]);
 
   return (
     <header
@@ -117,11 +142,12 @@ export default function Navbar() {
             </button>
             <button
               type="button"
-              onClick={() => setIsOpen(v => !v)}
+              onPointerDown={handleMenuPointerDown}
+              onClick={handleMenuClick}
               aria-label={isOpen ? t("Close menu", "মেনু বন্ধ করুন") : t("Open menu", "মেনু খুলুন")}
               aria-expanded={isOpen}
               aria-controls="mobile-nav-menu"
-              className="w-10 h-10 flex items-center justify-center text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 rounded-md"
+              className="w-10 h-10 flex items-center justify-center text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 rounded-md touch-manipulation select-none"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -132,6 +158,7 @@ export default function Navbar() {
         <AnimatePresence>
           {isOpen && (
             <motion.div
+              key="mobile-menu"
               initial={{ opacity: 0, y: -8, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.98 }}
@@ -148,6 +175,7 @@ export default function Navbar() {
                 >
                   <Link
                     to={link.to}
+                    onClick={closeMenu}
                     className={`block px-4 py-3 text-sm font-medium rounded-xl transition-colors ${
                       location.pathname === link.to
                         ? "text-orange-400 bg-orange-500/10"
@@ -165,6 +193,7 @@ export default function Navbar() {
                 href={getWhatsAppQuoteUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={closeMenu}
                 className="mt-3 flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-green-600 text-white text-sm font-semibold"
               >
                 <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
