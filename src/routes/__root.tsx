@@ -102,21 +102,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      // Preload responsive LCP hero image (mobile + desktop variants)
-      {
-        rel: "preload",
-        as: "image",
-        href: "/assets/hero/atdb-hero-monument-C3bd27q6-768.webp",
-        type: "image/webp",
-        media: "(max-width: 768px)",
-        fetchpriority: "high",
-      },
+      // Responsive LCP hero image preload — single hint, browser picks variant
       {
         rel: "preload",
         as: "image",
         href: "/assets/hero/atdb-hero-monument-C3bd27q6-1280.webp",
+        imagesrcset:
+          "/assets/hero/atdb-hero-monument-C3bd27q6-768.webp 768w, /assets/hero/atdb-hero-monument-C3bd27q6-1280.webp 1280w, /assets/hero/atdb-hero-monument-C3bd27q6-1920.webp 1920w",
+        imagesizes: "100vw",
         type: "image/webp",
-        media: "(min-width: 769px)",
         fetchpriority: "high",
       },
       {
