@@ -1,0 +1,87 @@
+name: E2E (Playwright)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright:
+    name: Playwright suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    # Official Playwright image — ships Chromium, Firefox, WebKit and ALL
+    # required system libraries (libglib, libnss, libwebkit, etc.) so we
+    # never have to run `playwright install-deps` ourselves.
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-jammy
+      options: --user 1001
+
+    env:
+      CI: "true"
+      BASE_URL: http://127.0.0.1:4173
+      # Image already has browsers; skip the post-install download.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Build app
+        run: npm run build
+
+      - name: Start preview server
+        run: |
+          npx vite preview --host 127.0.0.1 --port 4173 --strictPort &
+          echo $! > .vite-preview.pid
+          # Wait until the server actually responds (max 60s)
+          for i in $(seq 1 60); do
+            if curl -sfo /dev/null "$BASE_URL"; then
+              echo "Preview server is up"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Preview server failed to start" >&2
+          exit 1
+
+      - name: Run Playwright tests
+        run: npx playwright test --reporter=list,html
+
+      - name: Stop preview server
+        if: always()
+        run: |
+          if [ -f .vite-preview.pid ]; then
+            kill "$(cat .vite-preview.pid)" 2>/dev/null || true
+          fi
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 14
+
+      - name: Upload failure traces / screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: test-results
+          retention-days: 14
