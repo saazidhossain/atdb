@@ -24,7 +24,8 @@ export default function Index() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    if (reduce || coarse) return;
 
     const lenis = new Lenis({
       duration: 1.2,

@@ -38,7 +38,7 @@ export default function Navbar() {
     };
   }, [onScroll]);
 
-  useEffect(() => { setIsOpen(false); }, [location]);
+  useEffect(() => { setIsOpen(false); }, [location.pathname]);
 
   return (
     <header
@@ -115,7 +115,14 @@ export default function Navbar() {
               <Globe className="w-3 h-3" />
               {lang === "en" ? "বাং" : "EN"}
             </button>
-            <button onClick={() => setIsOpen(!isOpen)} className="w-10 h-10 flex items-center justify-center text-white">
+            <button
+              type="button"
+              onClick={() => setIsOpen(v => !v)}
+              aria-label={isOpen ? t("Close menu", "মেনু বন্ধ করুন") : t("Open menu", "মেনু খুলুন")}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav-menu"
+              className="w-10 h-10 flex items-center justify-center text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 rounded-md"
+            >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
@@ -129,6 +136,7 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.98 }}
               transition={{ duration: 0.25, ease: [0.2, 0.7, 0.2, 1] }}
+              id="mobile-nav-menu"
               className="md:hidden glass-strong rounded-2xl p-4 mb-4 overflow-hidden"
             >
               {navLinks.map((link, i) => (
