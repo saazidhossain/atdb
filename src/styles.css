@@ -281,6 +281,33 @@ html.lenis, html.lenis body { height: auto; }
 }
 .footer-glow { animation: footer-glow-pulse 10s ease-in-out infinite; }
 
+/* ── Reusable skeleton shimmer (used by card image placeholders, etc.) ── */
+@keyframes atdb-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.atdb-skel {
+  position: relative;
+  overflow: hidden;
+  background: hsl(0 0% 100% / 0.04);
+}
+.atdb-skel::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(0 0% 100% / 0.06) 40%,
+    hsl(25 95% 55% / 0.10) 50%,
+    hsl(0 0% 100% / 0.06) 60%,
+    transparent 100%
+  );
+  animation: atdb-shimmer 1.6s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .atdb-skel::after { animation: none; }
+}
+
 .logo-sweep { position: relative; overflow: hidden; border-radius: 0.75rem; }
 .logo-sweep::after {
   content: ""; position: absolute; inset: 0;
