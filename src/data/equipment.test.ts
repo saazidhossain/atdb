@@ -173,3 +173,30 @@ describe("Equipment data integrity", () => {
     expect(item.quantity).toBe("02");
   });
 });
+
+// ── Quotation Reference (makeRef) ────────────────────────────────────
+import { makeRef } from "../lib/generatePDF";
+
+describe("makeRef – quotation reference format", () => {
+  it("produces ATDB-XX-NNN-YYYYMMDD for every equipment ID", () => {
+    const ref = makeRef("ATDB-SP-008");
+    // Must start with the original ID
+    expect(ref).toMatch(/^ATDB-SP-008-\d{8}$/);
+  });
+
+  it("date segment is today's date", () => {
+    const now = new Date();
+    const expected = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+    equipmentData.forEach((eq) => {
+      const ref = makeRef(eq.id);
+      expect(ref).toBe(`${eq.id}-${expected}`);
+    });
+  });
+
+  it("matches pattern ATDB-*-YYYYMMDD for all equipment IDs", () => {
+    const pattern = /^ATDB-[A-Z]{2}-\d{3}-\d{8}$/;
+    equipmentData.forEach((eq) => {
+      expect(makeRef(eq.id)).toMatch(pattern);
+    });
+  });
+});
