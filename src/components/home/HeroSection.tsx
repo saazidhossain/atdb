@@ -23,34 +23,35 @@ export default function HeroSection() {
       <div
         className="relative z-10 max-w-7xl mx-auto w-full"
         style={{
-          paddingBottom: "clamp(5rem, 12vh, 9rem)",
-          paddingLeft: "clamp(1.5rem, 7vw, 6rem)",
-          paddingRight: "clamp(1.5rem, 7vw, 6rem)",
+          paddingTop: "clamp(7rem, 14vh, 10rem)",
+          paddingBottom: "clamp(4rem, 10vh, 8rem)",
+          paddingLeft: "clamp(1.25rem, 6vw, 5.5rem)",
+          paddingRight: "clamp(1.25rem, 6vw, 5.5rem)",
         }}
       >
-        <p className="text-xs font-mono tracking-[0.3em] text-white/50 uppercase mb-6 animate-fade-in" style={{ animationDelay: "200ms", animationFillMode: "both" }}>
+        <p className="text-[10px] sm:text-xs font-mono tracking-[0.25em] sm:tracking-[0.3em] text-white/55 uppercase mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: "200ms", animationFillMode: "both" }}>
           {t("Since 2000 · Dhaka & Tangail, Bangladesh", "২০০০ সাল থেকে · ঢাকা ও টাঙ্গাইল, বাংলাদেশ")}
         </p>
 
-        <h1 className="display-hero max-w-4xl font-display animate-fade-in" style={{ animationDelay: "400ms", animationFillMode: "both" }}>
+        <h1 className="display-hero max-w-[18ch] sm:max-w-3xl lg:max-w-4xl font-display animate-fade-in" style={{ animationDelay: "400ms", animationFillMode: "both" }}>
           {t("Bangladesh's premier ", "বাংলাদেশের সেরা ")}
           <span className="text-shimmer">{t("heavy equipment", "হেভি ইকুইপমেন্ট")}</span>
           {t(" rental partner.", " রেন্টাল পার্টনার।")}
         </h1>
 
-        <p className="mt-6 text-white/60 text-lg max-w-2xl leading-relaxed animate-fade-in" style={{ animationDelay: "600ms", animationFillMode: "both" }}>
+        <p className="mt-5 sm:mt-6 md:mt-7 text-white/65 text-[15px] sm:text-base md:text-lg max-w-xl md:max-w-2xl leading-relaxed text-pretty animate-fade-in" style={{ animationDelay: "600ms", animationFillMode: "both" }}>
           {t(
             "Professional heavy equipment rental and infrastructure support services for national-scale projects.",
             "জাতীয় পর্যায়ের প্রকল্পের জন্য পেশাদার হেভি ইকুইপমেন্ট রেন্টাল ও অবকাঠামো সাপোর্ট সার্ভিস।"
           )}
         </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 animate-fade-in" style={{ animationDelay: "800ms", animationFillMode: "both" }}>
-          <Link to="/equipment" className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-orange-500 hover:bg-orange-400 text-white font-semibold text-sm tracking-wide transition-all shadow-lg shadow-orange-500/30 hover:shadow-orange-400/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+        <div className="mt-8 sm:mt-10 md:mt-12 flex flex-col xs:flex-row sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4 animate-fade-in" style={{ animationDelay: "800ms", animationFillMode: "both" }}>
+          <Link to="/equipment" className="group inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-7 py-3.5 rounded-full bg-orange-500 hover:bg-orange-400 text-white font-semibold text-[13px] sm:text-sm tracking-wide transition-all shadow-lg shadow-orange-500/30 hover:shadow-orange-400/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
             {t("BROWSE EQUIPMENT", "ইকুইপমেন্ট দেখুন")}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full glass-strong hover:border-white/25 text-white font-semibold text-sm tracking-wide transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
+          <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 sm:px-7 py-3.5 rounded-full glass-strong hover:border-white/25 text-white font-semibold text-[13px] sm:text-sm tracking-wide transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
             <span className="relative flex h-2 w-2">
               <span className="absolute inset-0 rounded-full bg-green-400 opacity-75 animate-ping" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
@@ -60,7 +61,7 @@ export default function HeroSection() {
         </div>
 
         {/* Stats with animated counters */}
-        <div className="mt-14 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-2xl">
+        <div className="mt-12 sm:mt-14 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5 max-w-md sm:max-w-xl md:max-w-2xl">
           {[
             { value: 26, suffix: "+", label: t("Years Experience", "বছরের অভিজ্ঞতা") },
             { value: 30, suffix: "+", label: t("Equipment Units", "ইকুইপমেন্ট ইউনিট") },

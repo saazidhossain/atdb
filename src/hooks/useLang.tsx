@@ -18,11 +18,16 @@ const LangContext = createContext<LangContextType>({
 });
 
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(() => {
-    if (typeof window === "undefined") return "en";
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored === "bn" ? "bn" : "en";
-  });
+  // Always start as "en" so SSR and the first client render match.
+  // Hydrate the stored preference in an effect to avoid hydration mismatch.
+  const [lang, setLangState] = useState<Lang>("en");
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (stored === "bn" || stored === "en") setLangState(stored);
+    } catch { /* ignore */ }
+  }, []);
 
   const setLang = (l: Lang) => {
     setLangState(l);
