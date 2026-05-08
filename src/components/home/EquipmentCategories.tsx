@@ -8,24 +8,24 @@ export default function EquipmentCategories() {
   return (
     <section className="section-padding">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-12">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10 sm:mb-12">
+          <div className="min-w-0">
             <p className="eyebrow mb-3">{t("Our Equipment", "আমাদের ইকুইপমেন্ট")}</p>
-            <h2 className="text-3xl md:text-4xl font-bold font-display">{t("A complete fleet for every job site.", "প্রতিটি প্রজেক্টের জন্য সম্পূর্ণ ফ্লিট।")}</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold font-display break-words">{t("A complete fleet for every job site.", "প্রতিটি প্রজেক্টের জন্য সম্পূর্ণ ফ্লিট।")}</h2>
           </div>
-          <Link to="/equipment" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors">
+          <Link to="/equipment" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors shrink-0">
             {t("View all", "সব দেখুন")} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr">
           {equipmentCategories.map((cat, i) => (
             <Link
               key={cat.slug}
               to={`/equipment/${cat.slug}`}
               className="group relative overflow-hidden rounded-2xl glass-card glass-hover aspect-[4/3] h-full flex"
             >
-              <img src={cat.image} alt={cat.label} loading={i < 3 ? "eager" : "lazy"} decoding="async" fetchPriority={i < 3 ? "high" : "auto"} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <img src={cat.image} alt={cat.label} width={800} height={600} loading={i < 3 ? "eager" : "lazy"} decoding="async" fetchPriority={i < 3 ? "high" : "auto"} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="relative h-full w-full flex flex-col justify-end p-6 min-w-0">
