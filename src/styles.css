@@ -243,3 +243,15 @@ a.bg-orange-500:active, button.bg-orange-500:active {
   p a[href], li a[href], span a[href] { min-height: 0; min-width: 0; display: inline; }
   a.card, a[class*="card"], [role="button"][class*="card"] { min-height: 44px; }
 }
+
+/* ── Scroll-driven progress bar (CSS-only, zero JS) ── */
+@keyframes scroll-progress {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ── Off-screen content optimization ── */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
