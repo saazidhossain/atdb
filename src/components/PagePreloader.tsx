@@ -31,8 +31,8 @@ export default function PagePreloader() {
       window.dispatchEvent(new CustomEvent("atdb:preloader-exit"));
       window.setTimeout(() => setRemoved(true), 320);
     };
-    const uxSafety = window.setTimeout(fadeOverlay, 1200);
-    if (document.readyState === "complete") window.setTimeout(fadeOverlay, 200);
+    const uxSafety = window.setTimeout(fadeOverlay, 350);
+    if (document.readyState === "complete") window.setTimeout(fadeOverlay, 50);
     else window.addEventListener("load", fadeOverlay, { once: true });
 
     // ── __APP_READY__ timing (snapshot-grade) ─────────────────────────

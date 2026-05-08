@@ -138,6 +138,8 @@ export default function HeroMedia() {
   }, []);
 
   useEffect(() => {
+    // Skip parallax on touch devices entirely — saves a scroll listener + re-renders.
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) return;
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
