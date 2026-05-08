@@ -5,14 +5,19 @@ import { useLang } from "@/hooks/useLang";
 
 export default function FeaturedEquipment() {
   const { t } = useLang();
-  const featured = equipmentData.filter(e => e.featured);
+  const featured = equipmentData.filter(e => e.featured).slice(0, 6);
 
   return (
     <section className="section-padding bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="eyebrow mb-3">{t("Featured Equipment", "ফিচার্ড ইকুইপমেন্ট")}</p>
-          <h2 className="text-3xl md:text-4xl font-bold font-display">{t("Flagship machines from our certified fleet.", "আমাদের সার্টিফাইড ফ্লিটের ফ্ল্যাগশিপ মেশিন।")}</h2>
+        <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
+          <div>
+            <p className="eyebrow mb-3">{t("Featured Equipment", "ফিচার্ড ইকুইপমেন্ট")}</p>
+            <h2 className="text-3xl md:text-4xl font-bold font-display">{t("Flagship machines, ready to mobilise.", "ফ্ল্যাগশিপ মেশিন, মোবিলাইজে প্রস্তুত।")}</h2>
+          </div>
+          <Link to="/equipment" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors">
+            {t("View full fleet", "পুরো ফ্লিট দেখুন")} <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr items-stretch">
