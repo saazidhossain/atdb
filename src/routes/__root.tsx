@@ -109,7 +109,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/assets/hero/atdb-hero-monument-C3bd27q6-768.webp",
         type: "image/webp",
         media: "(max-width: 768px)",
-        // @ts-expect-error fetchpriority valid HTML
         fetchpriority: "high",
       },
       {
@@ -118,7 +117,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "/assets/hero/atdb-hero-monument-C3bd27q6-1280.webp",
         type: "image/webp",
         media: "(min-width: 769px)",
-        // @ts-expect-error fetchpriority valid HTML
         fetchpriority: "high",
       },
       {
