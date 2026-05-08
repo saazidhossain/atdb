@@ -235,10 +235,16 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   // ── Title block ────────────────────────────────────────────────────
   let y = HEADER_H + 10;
 
+  const refCode = makeRef(eq.id);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(7.5);
   doc.setTextColor(...BRAND.orange);
   doc.text(STR.sheet, MARGIN_X, y);
+  // Quotation ref on the right
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(...BRAND.muted);
+  doc.text(`${STR.refLabel} ${refCode}`, W - MARGIN_X, y, { align: "right" });
   // hairline under eyebrow
   doc.setDrawColor(...BRAND.hair);
   doc.setLineWidth(0.3);
