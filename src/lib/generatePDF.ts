@@ -75,7 +75,7 @@ function fmtQty(q: string): string {
 }
 
 /** Generate a short quotation reference: ATDB-CR-001-20260508 */
-function makeRef(id: string): string {
+export function makeRef(id: string): string {
   const d = new Date();
   const ds = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
   return `${id}-${ds}`;
