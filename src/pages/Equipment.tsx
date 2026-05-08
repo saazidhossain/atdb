@@ -236,6 +236,11 @@ function CategoryView({
                         ▶ VIDEO
                       </div>
                     )}
+                    {parseInt(eq.quantity, 10) > 1 && (
+                      <div className="absolute bottom-3 left-3 px-2 py-1 rounded-full bg-orange-500/90 backdrop-blur text-[10px] font-semibold text-white">
+                        ×{eq.quantity.replace(/^0/, "")} {t("units", "ইউনিট")}
+                      </div>
+                    )}
                   </Link>
                   <div className="p-5 flex-1 flex flex-col">
                     <span className="text-[10px] font-mono text-white/40 mb-1">{eq.id}</span>
