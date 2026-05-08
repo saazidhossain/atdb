@@ -2,6 +2,7 @@ import { Link } from "@/lib/router-compat";
 import { ArrowRight, MapPin } from "lucide-react";
 import { projectsData } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
+import SmartImage from "@/components/SmartImage";
 
 export default function ProjectHighlights() {
   const { t, lang } = useLang();
