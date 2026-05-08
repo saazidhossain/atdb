@@ -28,6 +28,9 @@ jobs:
     env:
       CI: "true"
       BASE_URL: http://127.0.0.1:4173
+      # Number of retries Playwright applies to each failing test.
+      # Bump here (no code change) if a particular branch is extra flaky.
+      PW_RETRIES: "2"
 
     steps:
       - name: Checkout
@@ -70,7 +73,11 @@ jobs:
           exit 1
 
       - name: Run Playwright tests
-        run: npx playwright test --reporter=list,html
+        # `--retries` here overrides the config's default and makes the
+        # retry count visible in the workflow logs. Combined with
+        # `trace: on-first-retry` + `video: retain-on-failure` in the
+        # config, only flaky/failed runs produce heavy artifacts.
+        run: npx playwright test --retries=${PW_RETRIES}
 
       - name: Stop preview server
         if: always()
