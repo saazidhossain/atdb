@@ -1,5 +1,25 @@
 import { describe, it, expect } from "vitest";
-import { equipmentData, equipmentCategories } from "./equipment";
+import { equipmentData, equipmentCategories, brands } from "./equipment";
+import type { EquipmentCategorySlug } from "./equipment";
+
+// ── Allowed values per category ──────────────────────────────────────
+const ALLOWED_BRANDS: Record<EquipmentCategorySlug, string[]> = {
+  cranes:     ["Liebherr", "Kato"],
+  rollers:    ["Sakai", "Dynapac", "Bomag", "Hawa", "Advance"],
+  excavators: ["Caterpillar", "Komatsu"],
+  loaders:    ["CASE", "XCMG", "JCB"],
+  support:    ["Honda", "Zhejiang", "TATA"],
+};
+
+const ID_PREFIX: Record<EquipmentCategorySlug, string> = {
+  cranes: "ATDB-CR-",
+  rollers: "ATDB-RR-",
+  excavators: "ATDB-EX-",
+  loaders: "ATDB-LD-",
+  support: "ATDB-SP-",
+};
+
+const VALID_FUELS = ["Diesel", "Petrol", "Electric", "CNG"];
 
 describe("Equipment data integrity", () => {
   it("has no duplicate IDs", () => {
@@ -47,7 +67,65 @@ describe("Equipment data integrity", () => {
     }
   });
 
-  // Snapshot: expected items per the ATDB Profile PDF
+  // ── Brand presence & category-brand constraint ─────────────────────
+
+  it("every item has a non-empty brand", () => {
+    for (const e of equipmentData) {
+      expect(e.brand.trim().length, `${e.id} brand is empty`).toBeGreaterThan(0);
+    }
+  });
+
+  it("every item's brand exists in the exported brands list", () => {
+    for (const e of equipmentData) {
+      expect(brands, `${e.id} brand "${e.brand}" not in brands[]`).toContain(e.brand);
+    }
+  });
+
+  it("every item's brand is allowed for its category", () => {
+    for (const e of equipmentData) {
+      const allowed = ALLOWED_BRANDS[e.category];
+      expect(
+        allowed.includes(e.brand),
+        `${e.id}: brand "${e.brand}" is not allowed for category "${e.category}". Allowed: ${allowed.join(", ")}`,
+      ).toBe(true);
+    }
+  });
+
+  // ── ID prefix matches category ─────────────────────────────────────
+
+  it("every item's ID prefix matches its category", () => {
+    for (const e of equipmentData) {
+      const prefix = ID_PREFIX[e.category];
+      expect(
+        e.id.startsWith(prefix),
+        `${e.id} should start with "${prefix}" for category "${e.category}"`,
+      ).toBe(true);
+    }
+  });
+
+  // ── Fuel type validation ───────────────────────────────────────────
+
+  it("every item has a valid fuel type", () => {
+    for (const e of equipmentData) {
+      expect(
+        VALID_FUELS.includes(e.fuel),
+        `${e.id} has invalid fuel "${e.fuel}". Allowed: ${VALID_FUELS.join(", ")}`,
+      ).toBe(true);
+    }
+  });
+
+  // ── categoryLabel consistency ──────────────────────────────────────
+
+  it("all items in the same category share the same categoryLabel", () => {
+    for (const cat of equipmentCategories) {
+      const items = equipmentData.filter((e) => e.category === cat.slug);
+      const labels = new Set(items.map((e) => e.categoryLabel));
+      expect(labels.size, `${cat.slug} has mixed categoryLabels: ${[...labels]}`).toBe(1);
+    }
+  });
+
+  // ── Snapshot: expected items per the ATDB Profile PDF ──────────────
+
   const EXPECTED = {
     cranes: { ids: ["ATDB-CR-001","ATDB-CR-002","ATDB-CR-003","ATDB-CR-004","ATDB-CR-005","ATDB-CR-006","ATDB-CR-007"], count: 7 },
     rollers: { ids: ["ATDB-RR-001","ATDB-RR-002","ATDB-RR-003","ATDB-RR-004","ATDB-RR-005","ATDB-RR-006","ATDB-RR-007","ATDB-RR-008","ATDB-RR-009"], count: 9 },
@@ -64,7 +142,8 @@ describe("Equipment data integrity", () => {
     });
   }
 
-  // Key fields from ATDB Profile that were previously wrong
+  // ── Key fields from ATDB Profile (regression guards) ───────────────
+
   it("RR-007 origin is England, model is GNT 3367", () => {
     const item = equipmentData.find((e) => e.id === "ATDB-RR-007")!;
     expect(item.origin).toBe("England");
