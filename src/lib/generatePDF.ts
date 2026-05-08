@@ -338,6 +338,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   y += 6;
 
   const specs: Array<[string, string]> = [
+    [STR.asset,    eq.id],
     [STR.category, eq.categoryLabel],
     [STR.brand,    eq.brand],
     [STR.model,    eq.model],
@@ -347,7 +348,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     [STR.fuel,     eq.fuel],
     [STR.qty,      fmtQty(eq.quantity)],
     [STR.notes,    eq.notes || "—"],
-    [STR.asset,    eq.id],
+    [STR.certLabel, STR.certValue],
   ];
 
   autoTable(doc, {
