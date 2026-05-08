@@ -18,6 +18,12 @@ export default function PagePreloader() {
       // Notify SkeletonShimmer (and any other coordinated overlay) so it
       // can begin its own fade in lockstep — no flicker between layers.
       window.dispatchEvent(new CustomEvent("atdb:preloader-exit"));
+      // Page-ready flag for E2E snapshot tests — waits on this instead of
+      // arbitrary timeouts so visual diffs stay deterministic.
+      try {
+        (window as Window & { __APP_READY__?: boolean }).__APP_READY__ = true;
+        window.dispatchEvent(new Event("atdb:app-ready"));
+      } catch { /* ignore */ }
       // Remove from DOM after fade-out so it can't intercept events
       window.setTimeout(() => setRemoved(true), 320);
     };
