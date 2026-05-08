@@ -10,7 +10,7 @@ async function waitForApp(page: import("@playwright/test").Page) {
 // ═══════════════════════════════════════════════════════════════════════
 
 test.describe("PDF spec sheet download", () => {
-  test("equipment detail page — Download Spec Sheet triggers PDF", async ({ page }) => {
+  test("@smoke equipment detail page — Download Spec Sheet triggers PDF", async ({ page }) => {
     // Go to a known equipment detail page
     await page.goto("/equipment/cranes");
     await waitForApp(page);

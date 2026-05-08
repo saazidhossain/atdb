@@ -118,7 +118,7 @@ test.describe("Keyboard navigation", () => {
 // ═══════════════════════════════════════════════════════════════════════
 // 3. ARIA labels and roles
 // ═══════════════════════════════════════════════════════════════════════
-test.describe("ARIA labeling", () => {
+test.describe("@smoke ARIA labeling", () => {
   test("navigation landmark exists", async ({ page }) => {
     await page.goto("/");
     await waitForApp(page);
