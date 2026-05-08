@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 /**
- * HeroMedia — single looping ATDB hero video background.
+ * HeroMedia — cinematic looping hero background with parallax.
  *
  * - Desktop: autoplay muted looping video (z-0).
  * - Mobile (≤768px): video paused, static WebP fallback as background.
- * - Dark gradient overlay sits above video (z-1) but below UI (z-10+).
+ * - Parallax: background scrolls at 40% of content speed for depth.
+ * - SSR-safe: always renders the desktop path on server; client
+ *   corrects in useEffect (no hydration mismatch).
  */
 
 const VIDEO_SRC = "/videos/atdb-hero-animated.mp4";
@@ -14,10 +16,12 @@ const FALLBACK_IMG_SM = "/assets/hero/atdb-hero-monument-C3bd27q6-768.webp";
 
 export default function HeroMedia() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isMobile, setIsMobile] = useState<boolean>(() =>
-    typeof window !== "undefined" ? window.matchMedia("(max-width: 768px)").matches : false
-  );
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  // Always start false for SSR consistency — correct in useEffect
+  const [isMobile, setIsMobile] = useState(false);
+  const [parallaxY, setParallaxY] = useState(0);
 
+  // Mobile detection — runs only on client
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
     const onChange = () => {
@@ -28,14 +32,32 @@ export default function HeroMedia() {
         else v.play().catch(() => {});
       }
     };
+    // Set initial value on client
+    onChange();
     mq.addEventListener?.("change", onChange);
-    // initial enforcement
-    if (mq.matches) videoRef.current?.pause();
     return () => mq.removeEventListener?.("change", onChange);
   }, []);
 
+  // Parallax scroll effect — GPU-accelerated via translate3d
+  const rafId = useRef(0);
+  const onScroll = useCallback(() => {
+    cancelAnimationFrame(rafId.current);
+    rafId.current = requestAnimationFrame(() => {
+      setParallaxY(window.scrollY * 0.4);
+    });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId.current);
+    };
+  }, [onScroll]);
+
   return (
     <div
+      ref={containerRef}
       className="hero-bg absolute inset-0 overflow-hidden"
       style={{
         zIndex: 0,
@@ -53,7 +75,13 @@ export default function HeroMedia() {
           playsInline
           preload="metadata"
           className="absolute inset-0 w-full h-full"
-          style={{ objectFit: "cover", objectPosition: "center center", zIndex: 0 }}
+          style={{
+            objectFit: "cover",
+            objectPosition: "center center",
+            zIndex: 0,
+            transform: `translate3d(0, ${parallaxY}px, 0)`,
+            willChange: "transform",
+          }}
         >
           <source src={VIDEO_SRC} type="video/mp4" />
         </video>
