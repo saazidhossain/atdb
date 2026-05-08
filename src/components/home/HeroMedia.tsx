@@ -177,7 +177,7 @@ export default function HeroMedia() {
         fetchPriority="high"
         loading="eager"
         className="absolute inset-0 h-full w-full object-cover object-center"
-        style={{ zIndex: 0, contentVisibility: "auto", ...parallaxStyle }}
+        style={{ zIndex: 0, ...parallaxStyle }}
       />
 
       {mountVideo && (
