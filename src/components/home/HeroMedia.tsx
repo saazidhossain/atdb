@@ -90,6 +90,41 @@ export default function HeroMedia() {
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [mountVideo, videoReady]);
 
+  // Mark video ready ONLY after first frame is actually painted AND
+  // playback has begun. Prevents fading in a black/empty frame, and
+  // prevents the opacity ramp from finishing before play() resolves
+  // (which manifested as a snap-to-content mid-fade).
+  useEffect(() => {
+    if (!mountVideo) return;
+    const v = videoRef.current;
+    if (!v) return;
+    let cancelled = false;
+
+    const markReady = () => { if (!cancelled) setVideoReady(true); };
+
+    const tryStart = async () => {
+      try { await v.play(); } catch { /* user-gesture or autoplay block — image stays */ return; }
+      const rvfc = (v as HTMLVideoElement & {
+        requestVideoFrameCallback?: (cb: () => void) => number;
+      }).requestVideoFrameCallback;
+      if (typeof rvfc === "function") {
+        rvfc.call(v, markReady);
+      } else {
+        // Fallback: loadeddata + 1 rAF ≈ first paint
+        if (v.readyState >= 2) requestAnimationFrame(markReady);
+        else v.addEventListener("loadeddata", () => requestAnimationFrame(markReady), { once: true });
+      }
+    };
+
+    if (v.readyState >= 3) tryStart();
+    else v.addEventListener("canplay", tryStart, { once: true });
+
+    return () => {
+      cancelled = true;
+      v.removeEventListener("canplay", tryStart);
+    };
+  }, [mountVideo]);
+
   // Parallax scroll effect — GPU-accelerated via translate3d
   const rafId = useRef(0);
   const onScroll = useCallback(() => {
@@ -111,6 +146,12 @@ export default function HeroMedia() {
   }, [onScroll]);
 
   const fallbackSrc = isMobile ? FALLBACK_IMG_SM : FALLBACK_IMG;
+  // Same transform on image + video → no drift between layers as the
+  // video fades in over a scrolled hero.
+  const parallaxStyle = {
+    transform: `translate3d(0, ${parallaxY}px, 0)`,
+    willChange: "transform" as const,
+  };
 
   return (
     <div
@@ -128,7 +169,7 @@ export default function HeroMedia() {
         fetchpriority="high"
         loading="eager"
         className="absolute inset-0 h-full w-full object-cover object-center"
-        style={{ zIndex: 0 }}
+        style={{ zIndex: 0, ...parallaxStyle }}
       />
 
       {mountVideo && (
@@ -140,14 +181,12 @@ export default function HeroMedia() {
           playsInline
           preload="auto"
           poster={fallbackSrc}
-          onCanPlay={() => setVideoReady(true)}
           className="absolute inset-0 w-full h-full"
           style={{
             objectFit: "cover",
             objectPosition: "center center",
             zIndex: 1,
-            transform: `translate3d(0, ${parallaxY}px, 0)`,
-            willChange: "transform",
+            ...parallaxStyle,
             opacity: videoReady ? 1 : 0,
             transition: "opacity 600ms ease-out",
           }}
