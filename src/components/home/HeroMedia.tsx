@@ -169,8 +169,8 @@ export default function HeroMedia() {
         src={FALLBACK_IMG}
         srcSet="/assets/hero/atdb-hero-monument-C3bd27q6-768.webp 768w, /assets/hero/atdb-hero-monument-C3bd27q6-1280.webp 1280w, /assets/hero/atdb-hero-monument-C3bd27q6-1920.webp 1920w"
         sizes="100vw"
-        width={1376}
-        height={768}
+        width={1920}
+        height={1072}
         alt=""
         aria-hidden
         decoding="sync"
