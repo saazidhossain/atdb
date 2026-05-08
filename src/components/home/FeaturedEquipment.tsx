@@ -2,6 +2,7 @@ import { Link } from "@/lib/router-compat";
 import { ArrowRight } from "lucide-react";
 import { equipmentData, getWhatsAppRentUrl } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
+import SmartImage from "@/components/SmartImage";
 
 export default function FeaturedEquipment() {
   const { t } = useLang();
@@ -24,7 +25,7 @@ export default function FeaturedEquipment() {
           {featured.map(eq => (
             <div key={eq.id} className="group glass-card rounded-2xl overflow-hidden glass-hover flex flex-col h-full">
               <Link to={`/equipment/${eq.category}/${eq.id}`} className="relative aspect-[4/3] overflow-hidden block">
-                <img
+                <SmartImage
                   src={eq.realPhotos?.[0] || eq.image}
                   alt={eq.name}
                   width={800}
