@@ -2,6 +2,8 @@ import { Shield, Award, Users, Clock, UserCircle2, Briefcase, Globe2, Leaf } fro
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
+import StandardsStrip from "@/components/home/StandardsStrip";
+import JourneyTimeline from "@/components/JourneyTimeline";
 import { useLang } from "@/hooks/useLang";
 import certIso from "@/assets/cert-iso-9001.png";
 import certCis from "@/assets/cert-cis.png";
