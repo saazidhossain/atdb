@@ -447,17 +447,17 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   doc.text(ctaLines, MARGIN_X + 7, y + 14);
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(9.5);
-  // Evenly distribute the three contact lines so nothing clips on A4.
+  doc.setFontSize(8.5);
   const ctaInnerW = contentW - 14;
-  const colW = ctaInnerW / 3;
+  const colW = ctaInnerW / 4;
   const baseX = MARGIN_X + 7;
   const baseY = y + ctaH - 9;
   doc.setTextColor(...BRAND.orange);
   doc.text(STR.contactWa,    baseX,                 baseY);
   doc.setTextColor(...BRAND.white);
-  doc.text(STR.contactEmail, baseX + colW,          baseY);
-  doc.text(STR.contactWeb,   baseX + colW * 2,      baseY);
+  doc.text(STR.contactPhone, baseX + colW,          baseY);
+  doc.text(STR.contactEmail, baseX + colW * 2,      baseY);
+  doc.text(STR.contactWeb,   baseX + colW * 3,      baseY);
 
   // ── Paginate footer on every page ──────────────────────────────────
   const totalPages = doc.getNumberOfPages();
