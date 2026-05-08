@@ -55,7 +55,7 @@ export default function RevealOnScroll({ children, className = "", delay = 0, st
                 key={(child as ReactElement).key ?? i}
                 style={{
                   opacity: shown ? 1 : 0,
-                  transform: shown ? "translateY(0)" : "translateY(20px)",
+                  transform: shown ? "translate3d(0,0,0)" : "translate3d(0,20px,0)",
                   transition: `opacity 600ms ease ${childDelay}ms, transform 600ms cubic-bezier(0.2,0.7,0.2,1) ${childDelay}ms`,
                   willChange: shown ? "auto" : "opacity, transform",
                 }}
