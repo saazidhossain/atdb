@@ -466,7 +466,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     drawFooter(doc, p, totalPages, eq);
   }
 
-  doc.save(`ATDB-${eq.id}-${eq.brand.replace(/\s+/g, "")}-${eq.model.replace(/\s+/g, "")}-Spec-Sheet.pdf`);
+  doc.save(`ATDB-${eq.id}-Spec-Sheet.pdf`);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────
