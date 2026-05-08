@@ -54,27 +54,43 @@ export default function Index() {
       <ScrollProgress />
       <Navbar />
       <HeroSection />
-      <RevealOnScroll><BrandMarquee /></RevealOnScroll>
+      <RevealOnScroll>
+        <BrandMarquee />
+      </RevealOnScroll>
       <SectionDivider />
-      <RevealOnScroll><HeroGallery /></RevealOnScroll>
+      <RevealOnScroll>
+        <HeroGallery />
+      </RevealOnScroll>
       <SectionDivider />
       <div className="cv-auto">
-        <RevealOnScroll><EquipmentCategories /></RevealOnScroll>
+        <RevealOnScroll>
+          <EquipmentCategories />
+        </RevealOnScroll>
         <SectionDivider />
-        <RevealOnScroll><FeaturedEquipment /></RevealOnScroll>
+        <RevealOnScroll>
+          <FeaturedEquipment />
+        </RevealOnScroll>
       </div>
       <SectionDivider />
       <div className="cv-auto">
-        <RevealOnScroll><LiveFleetPhotos /></RevealOnScroll>
+        <RevealOnScroll>
+          <LiveFleetPhotos />
+        </RevealOnScroll>
         <SectionDivider />
-        <RevealOnScroll><WhyATDB /></RevealOnScroll>
+        <RevealOnScroll>
+          <WhyATDB />
+        </RevealOnScroll>
       </div>
       <SectionDivider />
       <div className="cv-auto">
-        <RevealOnScroll><ProjectHighlights /></RevealOnScroll>
+        <RevealOnScroll>
+          <ProjectHighlights />
+        </RevealOnScroll>
       </div>
       <SectionDivider />
-      <RevealOnScroll><CTASection /></RevealOnScroll>
+      <RevealOnScroll>
+        <CTASection />
+      </RevealOnScroll>
       <Footer />
       <WhatsAppFAB />
     </div>

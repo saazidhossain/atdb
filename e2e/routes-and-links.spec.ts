@@ -137,6 +137,8 @@ test("@smoke unknown route shows 404 / not-found", async ({ page }) => {
   const body = await page.textContent("body");
   // Should have some indication it's a 404
   expect(
-    body?.includes("404") || body?.includes("not found") || body?.toLowerCase().includes("page not found")
+    body?.includes("404") ||
+      body?.includes("not found") ||
+      body?.toLowerCase().includes("page not found"),
   ).toBeTruthy();
 });

@@ -4,7 +4,13 @@ import {
   useParams as tUseParams,
   useLocation as tUseLocation,
 } from "@tanstack/react-router";
-import { forwardRef, useMemo, type AnchorHTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  useMemo,
+  type AnchorHTMLAttributes,
+  type ComponentType,
+  type ReactNode,
+} from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -21,7 +27,7 @@ type LinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   children?: ReactNode;
 };
 
-const TLinkAny = TLink as unknown as React.ComponentType<any>;
+const TLinkAny = TLink as unknown as ComponentType<Record<string, unknown>>;
 
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   ({ to, replace, state: _state, end: _end, children, ...rest }, ref) => {
@@ -35,9 +41,7 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
 Link.displayName = "Link";
 
 type NavLinkProps = Omit<LinkProps, "className"> & {
-  className?:
-    | string
-    | ((args: { isActive: boolean; isPending: boolean }) => string);
+  className?: string | ((args: { isActive: boolean; isPending: boolean }) => string);
 };
 
 export const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
@@ -45,9 +49,7 @@ export const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
     const renderChild = (args: { isActive?: boolean }) => {
       const isActive = !!args?.isActive;
       const cls =
-        typeof className === "function"
-          ? className({ isActive, isPending: false })
-          : className;
+        typeof className === "function" ? className({ isActive, isPending: false }) : className;
       return <span className={cn(cls)}>{children}</span>;
     };
     return (
@@ -79,19 +81,25 @@ export function useLocation() {
   );
 }
 
-type NavArg = string | number | { to?: string; replace?: boolean; search?: any; params?: any };
+type NavArg =
+  | string
+  | number
+  | { to?: string; replace?: boolean; search?: unknown; params?: unknown };
+type NavigateOpts = { to?: string; replace?: boolean; search?: unknown; params?: unknown };
+type NavigateFn = (opts: NavigateOpts) => void;
 
 export function useNavigate() {
   const nav = tUseNavigate();
+  const navigateFn = nav as unknown as NavigateFn;
   return (arg: NavArg) => {
     if (typeof arg === "number") {
       if (typeof window !== "undefined") window.history.go(arg);
       return;
     }
     if (typeof arg === "string") {
-      (nav as any)({ to: arg });
+      navigateFn({ to: arg });
       return;
     }
-    (nav as any)(arg);
+    navigateFn(arg);
   };
 }

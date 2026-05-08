@@ -37,7 +37,7 @@ export default function CTASection() {
             <p className="mt-5 text-white/60 leading-relaxed text-base sm:text-lg max-w-xl">
               {t(
                 "Tell us your equipment, location and dates on WhatsApp — we'll respond with availability and pricing.",
-                "হোয়াটসঅ্যাপে আমাদের ইকুইপমেন্ট, লোকেশন ও তারিখ জানান — আমরা অ্যাভেইলেবিলিটি ও প্রাইস জানিয়ে দেব।"
+                "হোয়াটসঅ্যাপে আমাদের ইকুইপমেন্ট, লোকেশন ও তারিখ জানান — আমরা অ্যাভেইলেবিলিটি ও প্রাইস জানিয়ে দেব।",
               )}
             </p>
 
@@ -89,9 +89,7 @@ export default function CTASection() {
                 <Zap className="w-5 h-5 text-orange-300" aria-hidden="true" />
               </span>
               <div className="flex flex-col leading-tight">
-                <span className="font-display font-bold text-2xl lg:text-3xl text-white">
-                  30+
-                </span>
+                <span className="font-display font-bold text-2xl lg:text-3xl text-white">30+</span>
                 <span className="text-[11px] tracking-[0.18em] uppercase text-white/55">
                   {t("Projects this yr", "এই বছরের প্রজেক্ট")}
                 </span>

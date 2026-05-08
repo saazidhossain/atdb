@@ -8,9 +8,16 @@ export const Route = createFileRoute("/equipment/")({
   head: () => ({
     meta: [
       { title: "Equipment Catalog — ATDB Trade International" },
-      { name: "description", content: "Browse ATDB's full fleet of cranes, excavators, rollers, loaders and support equipment available for rental in Bangladesh." },
+      {
+        name: "description",
+        content:
+          "Browse ATDB's full fleet of cranes, excavators, rollers, loaders and support equipment available for rental in Bangladesh.",
+      },
       { property: "og:title", content: "Equipment Catalog — ATDB" },
-      { property: "og:description", content: "Cranes, excavators, rollers, loaders and support equipment for rental." },
+      {
+        property: "og:description",
+        content: "Cranes, excavators, rollers, loaders and support equipment for rental.",
+      },
     ],
     scripts: [
       {

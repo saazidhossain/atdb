@@ -5,19 +5,19 @@ const PAGES = ["/", "/equipment", "/projects", "/about", "/contact"];
 
 // ── Known Bengali strings that should appear when lang=bn ────────────
 const BN_STRINGS: Record<string, string[]> = {
-  "/":          ["হোম", "যন্ত্রপাতি"],
+  "/": ["হোম", "যন্ত্রপাতি"],
   "/equipment": ["যন্ত্রপাতি"],
-  "/projects":  ["প্রকল্প"],
-  "/about":     ["সম্পর্কে"],
-  "/contact":   ["যোগাযোগ"],
+  "/projects": ["প্রকল্প"],
+  "/about": ["সম্পর্কে"],
+  "/contact": ["যোগাযোগ"],
 };
 
 const EN_STRINGS: Record<string, string[]> = {
-  "/":          ["Home", "Equipment"],
+  "/": ["Home", "Equipment"],
   "/equipment": ["Equipment"],
-  "/projects":  ["Projects"],
-  "/about":     ["About"],
-  "/contact":   ["Contact"],
+  "/projects": ["Projects"],
+  "/about": ["About"],
+  "/contact": ["Contact"],
 };
 
 async function waitForApp(page: import("@playwright/test").Page) {
@@ -32,9 +32,12 @@ test.describe("Language toggle (EN ↔ BN)", () => {
       await waitForApp(page);
 
       // Find the language toggle button (Globe icon or BN/EN text)
-      const langBtn = page.locator('button:has(svg), button:has-text("BN"), button:has-text("বাং")').filter({
-        has: page.locator('[class*="Globe"], [data-lang-toggle]'),
-      }).first();
+      const langBtn = page
+        .locator('button:has(svg), button:has-text("BN"), button:has-text("বাং")')
+        .filter({
+          has: page.locator('[class*="Globe"], [data-lang-toggle]'),
+        })
+        .first();
 
       // If we can't find a specific toggle, look for any BN button
       const fallbackBtn = page.locator('button:has-text("বাং"), button:has-text("BN")').first();
@@ -42,7 +45,7 @@ test.describe("Language toggle (EN ↔ BN)", () => {
 
       if ((await toggleBtn.count()) === 0) {
         // Try clicking globe icon in navbar
-        const globe = page.locator('nav button:has(svg)').last();
+        const globe = page.locator("nav button:has(svg)").last();
         if ((await globe.count()) > 0) {
           await globe.click();
           await page.waitForTimeout(300);

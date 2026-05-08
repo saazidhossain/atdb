@@ -4,18 +4,39 @@ import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { equipmentData, fleetVideos } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
 
-interface Slide { kind: "image" | "video"; src: string; poster?: string; title: string; titleBn?: string; id?: string; category?: string; }
+interface Slide {
+  kind: "image" | "video";
+  src: string;
+  poster?: string;
+  title: string;
+  titleBn?: string;
+  id?: string;
+  category?: string;
+}
 
 export default function HeroGallery() {
   const { t, lang } = useLang();
 
   const slides = useMemo<Slide[]>(() => {
     const real = equipmentData
-      .filter(e => e.realPhotos && e.realPhotos.length > 0)
-      .flatMap(e => e.realPhotos!.map(p => ({
-        kind: "image" as const, src: p, title: e.name, titleBn: e.banglaLabel, id: e.id, category: e.category,
-      })));
-    const vids: Slide[] = fleetVideos.map(v => ({ kind: "video", src: v.src, poster: v.poster, title: v.label, titleBn: v.labelBn }));
+      .filter((e) => e.realPhotos && e.realPhotos.length > 0)
+      .flatMap((e) =>
+        e.realPhotos!.map((p) => ({
+          kind: "image" as const,
+          src: p,
+          title: e.name,
+          titleBn: e.banglaLabel,
+          id: e.id,
+          category: e.category,
+        })),
+      );
+    const vids: Slide[] = fleetVideos.map((v) => ({
+      kind: "video",
+      src: v.src,
+      poster: v.poster,
+      title: v.label,
+      titleBn: v.labelBn,
+    }));
     const merged: Slide[] = [];
     if (vids[0]) merged.push(vids[0]);
     merged.push(...real.slice(0, 3));
@@ -40,7 +61,7 @@ export default function HeroGallery() {
       elapsed += interval;
       setProgress((elapsed / duration) * 100);
       if (elapsed >= duration) {
-        setIdx(i => (i + 1) % total);
+        setIdx((i) => (i + 1) % total);
         setProgress(0);
       }
     }, interval);
@@ -70,7 +91,7 @@ export default function HeroGallery() {
             </h2>
           </div>
           <button
-            onClick={() => setPaused(p => !p)}
+            onClick={() => setPaused((p) => !p)}
             aria-label={paused ? t("Play", "চালান") : t("Pause", "বিরতি")}
             className="hidden sm:flex w-10 h-10 rounded-full glass hover:bg-white/15 items-center justify-center text-white transition-colors"
           >
@@ -80,10 +101,7 @@ export default function HeroGallery() {
 
         <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden glass-card group">
           {slides.map((s, i) => {
-            const dist = Math.min(
-              Math.abs(i - idx),
-              total - Math.abs(i - idx)
-            );
+            const dist = Math.min(Math.abs(i - idx), total - Math.abs(i - idx));
             const shouldMount = dist <= 1;
             return (
               <div
@@ -92,8 +110,8 @@ export default function HeroGallery() {
                   i === idx ? "opacity-100 scale-100" : "opacity-0 scale-105 pointer-events-none"
                 }`}
               >
-                {shouldMount && (
-                  s.kind === "video" && i === idx ? (
+                {shouldMount &&
+                  (s.kind === "video" && i === idx ? (
                     <video
                       src={s.src}
                       poster={s.poster}
@@ -115,8 +133,7 @@ export default function HeroGallery() {
                       fetchPriority={i === 0 ? "high" : "low"}
                       className={`w-full h-full object-cover ${i === idx ? "animate-hero-kenburns" : ""}`}
                     />
-                  )
-                )}
+                  ))}
               </div>
             );
           })}
@@ -124,7 +141,9 @@ export default function HeroGallery() {
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30 pointer-events-none" />
 
           <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
-            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 ${cur.kind === "video" ? "bg-red-600/90 text-white" : "bg-green-600/90 text-white"}`}>
+            <span
+              className={`px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1.5 ${cur.kind === "video" ? "bg-red-600/90 text-white" : "bg-green-600/90 text-white"}`}
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               {cur.kind === "video" ? t("LIVE VIDEO", "লাইভ ভিডিও") : t("REAL PHOTO", "আসল ছবি")}
             </span>
@@ -132,7 +151,9 @@ export default function HeroGallery() {
 
           <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7 z-10 flex items-end justify-between gap-4">
             <div className="min-w-0">
-              <h3 className="text-lg sm:text-2xl font-bold text-white line-clamp-2">{lang === "bn" && cur.titleBn ? cur.titleBn : cur.title}</h3>
+              <h3 className="text-lg sm:text-2xl font-bold text-white line-clamp-2">
+                {lang === "bn" && cur.titleBn ? cur.titleBn : cur.title}
+              </h3>
               {cur.id && <p className="text-orange-300/80 text-xs font-mono mt-1">{cur.id}</p>}
             </div>
             {cur.id && cur.category && (

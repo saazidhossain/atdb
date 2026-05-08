@@ -136,12 +136,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
             postalCode: "1216",
             addressCountry: "BD",
           },
-          contactPoint: [{
-            "@type": "ContactPoint",
-            telephone: "+8801712106242",
-            contactType: "sales",
-            availableLanguage: ["en", "bn"],
-          }],
+          contactPoint: [
+            {
+              "@type": "ContactPoint",
+              telephone: "+8801712106242",
+              contactType: "sales",
+              availableLanguage: ["en", "bn"],
+            },
+          ],
           sameAs: ["https://www.facebook.com/atdbtrade"],
         }),
       },

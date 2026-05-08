@@ -11,13 +11,15 @@ export async function waitForAppReady(page: Page, timeout = 10_000) {
     .waitForFunction(
       () => (window as Window & { __APP_READY__?: boolean }).__APP_READY__ === true,
       undefined,
-      { timeout }
+      { timeout },
     )
-    .catch(() => { /* fall through — caller can still proceed */ });
+    .catch(() => {
+      /* fall through — caller can still proceed */
+    });
   // Belt-and-braces: re-await fonts in the test context too, since the
   // page may have navigated after the initial flag was set.
   await page.evaluate(
-    () => (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready
+    () => (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready,
   );
 }
 
@@ -37,6 +39,10 @@ export const FREEZE_CSS = `
 /** Force English locale so snapshot text widths are deterministic. */
 export async function forceEnglishLocale(page: Page) {
   await page.addInitScript(() => {
-    try { localStorage.setItem("atdb_lang", "en"); } catch { /* ignore */ }
+    try {
+      localStorage.setItem("atdb_lang", "en");
+    } catch {
+      /* ignore */
+    }
   });
 }

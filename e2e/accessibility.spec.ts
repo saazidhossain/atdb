@@ -24,13 +24,13 @@ test.describe("Accessibility audit (axe-core)", () => {
 
       // Allow some violations but flag critical ones
       const critical = results.violations.filter(
-        (v) => v.impact === "critical" || v.impact === "serious"
+        (v) => v.impact === "critical" || v.impact === "serious",
       );
 
       if (critical.length > 0) {
-        const summary = critical.map(
-          (v) => `[${v.impact}] ${v.id}: ${v.description} (${v.nodes.length} instances)`
-        ).join("\n");
+        const summary = critical
+          .map((v) => `[${v.impact}] ${v.id}: ${v.description} (${v.nodes.length} instances)`)
+          .join("\n");
         console.warn(`A11y issues on ${path}:\n${summary}`);
       }
 
@@ -65,7 +65,7 @@ test.describe("Keyboard navigation", () => {
 
     // Should have focused at least some links/buttons
     const interactiveCount = focusedElements.filter(
-      (e) => e.startsWith("A[") || e.startsWith("BUTTON[")
+      (e) => e.startsWith("A[") || e.startsWith("BUTTON["),
     ).length;
     expect(interactiveCount).toBeGreaterThan(3);
   });
@@ -85,10 +85,7 @@ test.describe("Keyboard navigation", () => {
       const outline = styles.outlineStyle;
       const boxShadow = styles.boxShadow;
       // Check for visible focus indicator
-      return (
-        (outline !== "none" && outline !== "") ||
-        (boxShadow !== "none" && boxShadow !== "")
-      );
+      return (outline !== "none" && outline !== "") || (boxShadow !== "none" && boxShadow !== "");
     });
 
     expect(hasOutline).toBeTruthy();
@@ -179,14 +176,10 @@ test.describe("Hover effects", () => {
 
     const navLink = page.locator('nav a[href="/equipment"]').first();
     if ((await navLink.count()) > 0) {
-      const before = await navLink.evaluate((el) =>
-        window.getComputedStyle(el).color
-      );
+      const before = await navLink.evaluate((el) => window.getComputedStyle(el).color);
       await navLink.hover();
       await page.waitForTimeout(200);
-      const after = await navLink.evaluate((el) =>
-        window.getComputedStyle(el).color
-      );
+      const after = await navLink.evaluate((el) => window.getComputedStyle(el).color);
       // Color should change or other visual effect
       // This is a basic check — hover may use transform/opacity instead
     }
@@ -196,16 +189,12 @@ test.describe("Hover effects", () => {
     await page.goto("/");
     await waitForApp(page);
 
-    const ctaBtn = page.locator('a.bg-orange-500, button.bg-orange-500').first();
+    const ctaBtn = page.locator("a.bg-orange-500, button.bg-orange-500").first();
     if ((await ctaBtn.count()) > 0) {
-      const beforeTransform = await ctaBtn.evaluate((el) =>
-        window.getComputedStyle(el).transform
-      );
+      const beforeTransform = await ctaBtn.evaluate((el) => window.getComputedStyle(el).transform);
       await ctaBtn.hover();
       await page.waitForTimeout(300);
-      const afterTransform = await ctaBtn.evaluate((el) =>
-        window.getComputedStyle(el).transform
-      );
+      const afterTransform = await ctaBtn.evaluate((el) => window.getComputedStyle(el).transform);
       // Transform should change on hover
       expect(afterTransform).not.toBe(beforeTransform);
     }

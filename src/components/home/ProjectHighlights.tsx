@@ -14,11 +14,18 @@ export default function ProjectHighlights() {
         <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4 flex-wrap">
           <div className="max-w-2xl">
             <p className="eyebrow mb-2 sm:mb-3">{t("Project Highlights", "প্রজেক্ট হাইলাইটস")}</p>
-            <h2 className="text-[1.625rem] sm:text-3xl md:text-4xl font-bold font-display leading-[1.15] tracking-tight text-balance">{t("Powering Bangladesh's biggest builds.", "বাংলাদেশের সবচেয়ে বড় নির্মাণে শক্তি যোগাচ্ছি।")}</h2>
+            <h2 className="text-[1.625rem] sm:text-3xl md:text-4xl font-bold font-display leading-[1.15] tracking-tight text-balance">
+              {t(
+                "Powering Bangladesh's biggest builds.",
+                "বাংলাদেশের সবচেয়ে বড় নির্মাণে শক্তি যোগাচ্ছি।",
+              )}
+            </h2>
           </div>
           <Link
             to="/projects"
-            onClick={() => trackEvent("view_all_projects_click", { location: "home_project_highlights" })}
+            onClick={() =>
+              trackEvent("view_all_projects_click", { location: "home_project_highlights" })
+            }
             className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors"
           >
             {t("View all projects", "সব প্রজেক্ট দেখুন")} <ArrowRight className="w-4 h-4" />
@@ -29,9 +36,19 @@ export default function ProjectHighlights() {
           {featured.map((project, i) => (
             <div key={i} className="group glass-card rounded-2xl overflow-hidden glass-hover">
               <div className="relative aspect-[16/10] overflow-hidden">
-                <SmartImage src={project.image} alt={lang === "bn" ? project.titleBn : project.title} width={800} height={500} decoding="async" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
+                <SmartImage
+                  src={project.image}
+                  alt={lang === "bn" ? project.titleBn : project.title}
+                  width={800}
+                  height={500}
+                  decoding="async"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  loading="lazy"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute top-3 left-3 px-3 py-1 rounded-full glass text-[10px] font-semibold text-orange-400 tracking-wider uppercase">{lang === "bn" ? project.typeBn : project.type}</div>
+                <div className="absolute top-3 left-3 px-3 py-1 rounded-full glass text-[10px] font-semibold text-orange-400 tracking-wider uppercase">
+                  {lang === "bn" ? project.typeBn : project.type}
+                </div>
                 <div className="absolute bottom-3 left-3 right-3 flex items-start gap-1.5 text-white/60 text-xs leading-snug">
                   <MapPin className="w-3 h-3 flex-shrink-0" />
                   <span className="min-w-0 break-words [overflow-wrap:anywhere]">
@@ -40,7 +57,9 @@ export default function ProjectHighlights() {
                 </div>
               </div>
               <div className="p-4 sm:p-5">
-                <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]">{lang === "bn" ? project.titleBn : project.title}</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]">
+                  {lang === "bn" ? project.titleBn : project.title}
+                </h3>
               </div>
             </div>
           ))}

@@ -76,7 +76,9 @@ test.describe("PDF spec sheet download", () => {
     await pdfBtn.click();
 
     // Button should show loading text
-    const loadingText = page.locator('button:has-text("Generating"), button:has-text("তৈরি হচ্ছে")');
+    const loadingText = page.locator(
+      'button:has-text("Generating"), button:has-text("তৈরি হচ্ছে")',
+    );
     // Brief check — loading state may be very fast
     const wasLoading = await loadingText.count();
     // Either we caught loading state or it finished — both OK

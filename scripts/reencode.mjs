@@ -35,6 +35,6 @@ for (const [base, variants] of Object.entries(groups)) {
     const { rename, stat } = await import("fs/promises");
     await rename(out + ".tmp", out);
     const s = await stat(out);
-    console.log(`  ${w}px → ${(s.size/1024).toFixed(1)} KB`);
+    console.log(`  ${w}px → ${(s.size / 1024).toFixed(1)} KB`);
   }
 }

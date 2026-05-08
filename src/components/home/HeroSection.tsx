@@ -17,9 +17,21 @@ export default function HeroSection() {
       <HeroMedia />
 
       {/* Ambient glow + bottom vignette + fade into next section */}
-      <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-20 w-[32rem] h-[32rem] rounded-full bg-orange-500/[0.07] blur-3xl" style={{ zIndex: 2 }} />
-      <div aria-hidden className="pointer-events-none absolute inset-0 hero-vignette" style={{ zIndex: 2 }} />
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-40 hero-fade-bottom" style={{ zIndex: 3 }} />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 -left-20 w-[32rem] h-[32rem] rounded-full bg-orange-500/[0.07] blur-3xl"
+        style={{ zIndex: 2 }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 hero-vignette"
+        style={{ zIndex: 2 }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 hero-fade-bottom"
+        style={{ zIndex: 3 }}
+      />
 
       {/* Skeleton placeholders — sit above the media but below the real
           text. Auto-fade once fonts + LCP image are ready, eliminating the
@@ -35,20 +47,32 @@ export default function HeroSection() {
           paddingRight: "clamp(1.25rem, 6vw, 5.5rem)",
         }}
       >
-        <p className="text-[10px] sm:text-xs font-mono tracking-[0.25em] sm:tracking-[0.3em] text-white/55 uppercase mb-4 sm:mb-6 animate-fade-in" style={{ animationDelay: "200ms", animationFillMode: "both" }}>
-          {t("Since 2000 · Dhaka & Tangail, Bangladesh", "২০০০ সাল থেকে · ঢাকা ও টাঙ্গাইল, বাংলাদেশ")}
+        <p
+          className="text-[10px] sm:text-xs font-mono tracking-[0.25em] sm:tracking-[0.3em] text-white/55 uppercase mb-4 sm:mb-6 animate-fade-in"
+          style={{ animationDelay: "200ms", animationFillMode: "both" }}
+        >
+          {t(
+            "Since 2000 · Dhaka & Tangail, Bangladesh",
+            "২০০০ সাল থেকে · ঢাকা ও টাঙ্গাইল, বাংলাদেশ",
+          )}
         </p>
 
-        <h1 className="display-hero max-w-[18ch] sm:max-w-3xl lg:max-w-4xl font-display animate-fade-in" style={{ animationDelay: "400ms", animationFillMode: "both" }}>
+        <h1
+          className="display-hero max-w-[18ch] sm:max-w-3xl lg:max-w-4xl font-display animate-fade-in"
+          style={{ animationDelay: "400ms", animationFillMode: "both" }}
+        >
           {t("Bangladesh's premier ", "বাংলাদেশের সেরা ")}
           <span className="text-shimmer">{t("heavy equipment", "হেভি ইকুইপমেন্ট")}</span>
           {t(" rental partner.", " রেন্টাল পার্টনার।")}
         </h1>
 
-        <p className="mt-5 sm:mt-6 md:mt-7 text-white/65 text-[15px] sm:text-base md:text-lg max-w-xl md:max-w-2xl leading-relaxed text-pretty animate-fade-in" style={{ animationDelay: "600ms", animationFillMode: "both" }}>
+        <p
+          className="mt-5 sm:mt-6 md:mt-7 text-white/65 text-[15px] sm:text-base md:text-lg max-w-xl md:max-w-2xl leading-relaxed text-pretty animate-fade-in"
+          style={{ animationDelay: "600ms", animationFillMode: "both" }}
+        >
           {t(
             "Professional heavy equipment rental and infrastructure support services for national-scale projects.",
-            "জাতীয় পর্যায়ের প্রকল্পের জন্য পেশাদার হেভি ইকুইপমেন্ট রেন্টাল ও অবকাঠামো সাপোর্ট সার্ভিস।"
+            "জাতীয় পর্যায়ের প্রকল্পের জন্য পেশাদার হেভি ইকুইপমেন্ট রেন্টাল ও অবকাঠামো সাপোর্ট সার্ভিস।",
           )}
         </p>
 
@@ -93,11 +117,17 @@ export default function HeroSection() {
             { value: 25, suffix: "", label: t("Skilled Staff", "দক্ষ কর্মী") },
             { value: 2, suffix: "", label: t("Office Locations", "অফিস") },
           ].map((stat, i) => (
-            <div key={stat.label} className="glass-card stat-accent rounded-2xl px-3 py-4 sm:p-4 text-center transition-all duration-300 hover:-translate-y-0.5" style={{ animationDelay: `${1000 + i * 100}ms` }}>
+            <div
+              key={stat.label}
+              className="glass-card stat-accent rounded-2xl px-3 py-4 sm:p-4 text-center transition-all duration-300 hover:-translate-y-0.5"
+              style={{ animationDelay: `${1000 + i * 100}ms` }}
+            >
               <div className="font-display text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-orange-300 to-orange-500 leading-none">
                 <CountUp end={stat.value} suffix={stat.suffix} duration={1600 + i * 200} />
               </div>
-              <div className="text-[11px] sm:text-xs text-white/55 mt-2 tracking-wide leading-tight">{stat.label}</div>
+              <div className="text-[11px] sm:text-xs text-white/55 mt-2 tracking-wide leading-tight">
+                {stat.label}
+              </div>
             </div>
           ))}
         </div>

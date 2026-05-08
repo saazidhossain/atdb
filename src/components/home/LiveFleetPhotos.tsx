@@ -4,7 +4,7 @@ import { Play, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react";
 import { useLang } from "@/hooks/useLang";
 import { Link } from "@/lib/router-compat";
 
-function VideoCard({ video }: { video: typeof fleetVideos[0] }) {
+function VideoCard({ video }: { video: (typeof fleetVideos)[0] }) {
   const ref = useRef<HTMLVideoElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -25,7 +25,7 @@ function VideoCard({ video }: { video: typeof fleetVideos[0] }) {
           setPlaying(false);
         }
       },
-      { rootMargin: "200px 0px" }
+      { rootMargin: "200px 0px" },
     );
     io.observe(wrapRef.current);
     return () => io.disconnect();
@@ -33,7 +33,11 @@ function VideoCard({ video }: { video: typeof fleetVideos[0] }) {
 
   const toggle = () => {
     if (!ref.current) return;
-    if (playing) { ref.current.pause(); } else { ref.current.play(); }
+    if (playing) {
+      ref.current.pause();
+    } else {
+      ref.current.play();
+    }
     setPlaying(!playing);
   };
 
@@ -85,18 +89,27 @@ function VideoCard({ video }: { video: typeof fleetVideos[0] }) {
         <div>
           <div className="flex items-center gap-2 mb-1.5">
             <span className="px-2 py-0.5 rounded-full bg-red-600/90 text-[10px] font-bold text-white flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> {t("VIDEO", "ভিডিও")}
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />{" "}
+              {t("VIDEO", "ভিডিও")}
             </span>
           </div>
           <h4 className="text-sm font-semibold text-white line-clamp-1">{label}</h4>
         </div>
         <div className="flex items-center gap-1.5 touch-manipulation">
           {playing && (
-            <button onClick={toggle} aria-label={t("Pause", "বিরতি")} className="w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/15 backdrop-blur flex items-center justify-center text-white hover:bg-white/25 transition-colors">
+            <button
+              onClick={toggle}
+              aria-label={t("Pause", "বিরতি")}
+              className="w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/15 backdrop-blur flex items-center justify-center text-white hover:bg-white/25 transition-colors"
+            >
               <Pause className="w-3.5 h-3.5" />
             </button>
           )}
-          <button onClick={() => setMuted(!muted)} aria-label={muted ? t("Unmute", "আনমিউট") : t("Mute", "মিউট")} className="w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/15 backdrop-blur flex items-center justify-center text-white hover:bg-white/25 transition-colors">
+          <button
+            onClick={() => setMuted(!muted)}
+            aria-label={muted ? t("Unmute", "আনমিউট") : t("Mute", "মিউট")}
+            className="w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/15 backdrop-blur flex items-center justify-center text-white hover:bg-white/25 transition-colors"
+          >
             {muted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
           </button>
           <button
@@ -117,8 +130,8 @@ export default function LiveFleetPhotos() {
   const { t, lang } = useLang();
 
   const realItems = equipmentData
-    .filter(e => e.realPhotos && e.realPhotos.length > 0)
-    .flatMap(e =>
+    .filter((e) => e.realPhotos && e.realPhotos.length > 0)
+    .flatMap((e) =>
       (e.realPhotos || []).map((photo, idx) => ({
         src: photo,
         id: e.id,
@@ -128,11 +141,11 @@ export default function LiveFleetPhotos() {
         categoryLabel: e.categoryLabel,
         index: idx,
         source: "real" as const,
-      }))
+      })),
     );
 
   const aiItems = equipmentData
-    .filter(e => e.image && (!e.realPhotos || e.realPhotos.length === 0))
+    .filter((e) => e.image && (!e.realPhotos || e.realPhotos.length === 0))
     .slice(0, 8)
     .map((e, idx) => ({
       src: e.image,
@@ -149,10 +162,11 @@ export default function LiveFleetPhotos() {
 
   const filters = [
     { key: "all", label: t("All", "সবগুলো") },
-    ...equipmentCategories.map(c => ({ key: c.slug, label: lang === "bn" ? c.bangla : c.label })),
+    ...equipmentCategories.map((c) => ({ key: c.slug, label: lang === "bn" ? c.bangla : c.label })),
   ];
 
-  const filtered = activeFilter === "all" ? photoItems : photoItems.filter(p => p.category === activeFilter);
+  const filtered =
+    activeFilter === "all" ? photoItems : photoItems.filter((p) => p.category === activeFilter);
 
   return (
     <section className="section-padding">
@@ -168,7 +182,7 @@ export default function LiveFleetPhotos() {
             <p className="text-white/50 text-sm mt-3 max-w-2xl">
               {t(
                 "Real, on-site photos and short action clips from our active fleet — auto-paced for browsing on mobile, tablet and desktop.",
-                "আমাদের সক্রিয় ফ্লিটের আসল সাইট ফটো ও সংক্ষিপ্ত অ্যাকশন ক্লিপ — মোবাইল, ট্যাবলেট ও ডেস্কটপের জন্য রেসপন্সিভ।"
+                "আমাদের সক্রিয় ফ্লিটের আসল সাইট ফটো ও সংক্ষিপ্ত অ্যাকশন ক্লিপ — মোবাইল, ট্যাবলেট ও ডেস্কটপের জন্য রেসপন্সিভ।",
               )}
             </p>
           </div>
@@ -184,7 +198,7 @@ export default function LiveFleetPhotos() {
         )}
 
         <div className="flex flex-wrap gap-2 mb-8">
-          {filters.map(f => (
+          {filters.map((f) => (
             <button
               key={f.key}
               onClick={() => setActiveFilter(f.key)}
@@ -216,20 +230,28 @@ export default function LiveFleetPhotos() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-100" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <div className="flex items-center gap-2 mb-2">
-                     <span className={`px-2 py-1 rounded-full text-[10px] font-semibold ${photo.source === "real" ? "bg-green-600/80 text-white" : "bg-white/15 text-white/80 backdrop-blur"}`}>
-                       {photo.source === "real" ? t("REAL", "আসল") : t("AI", "এআই")}
-                     </span>
+                    <span
+                      className={`px-2 py-1 rounded-full text-[10px] font-semibold ${photo.source === "real" ? "bg-green-600/80 text-white" : "bg-white/15 text-white/80 backdrop-blur"}`}
+                    >
+                      {photo.source === "real" ? t("REAL", "আসল") : t("AI", "এআই")}
+                    </span>
                     <span className="text-[10px] font-mono text-orange-400">{photo.id}</span>
                   </div>
-                  <h4 className="text-sm font-semibold text-white mt-0.5 line-clamp-2">{lang === "bn" && photo.nameBn ? photo.nameBn : photo.name}</h4>
+                  <h4 className="text-sm font-semibold text-white mt-0.5 line-clamp-2">
+                    {lang === "bn" && photo.nameBn ? photo.nameBn : photo.name}
+                  </h4>
                 </div>
-                <div className={`absolute top-3 right-3 w-2.5 h-2.5 rounded-full ${photo.source === "real" ? "bg-green-500 shadow-green-500/50" : "bg-orange-400 shadow-orange-400/40"} animate-pulse shadow-lg`} />
+                <div
+                  className={`absolute top-3 right-3 w-2.5 h-2.5 rounded-full ${photo.source === "real" ? "bg-green-500 shadow-green-500/50" : "bg-orange-400 shadow-orange-400/40"} animate-pulse shadow-lg`}
+                />
               </Link>
             ))}
           </div>
         ) : (
           <div className="text-center py-16 glass-card rounded-2xl">
-            <p className="text-white/40 text-sm">{t("No photos in this category yet.", "এই ক্যাটাগরিতে এখনও কোনো ফটো নেই।")}</p>
+            <p className="text-white/40 text-sm">
+              {t("No photos in this category yet.", "এই ক্যাটাগরিতে এখনও কোনো ফটো নেই।")}
+            </p>
           </div>
         )}
       </div>

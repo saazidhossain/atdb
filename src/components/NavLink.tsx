@@ -2,7 +2,10 @@ import { forwardRef, type AnchorHTMLAttributes } from "react";
 import { NavLink as CompatNavLink } from "@/lib/router-compat";
 import { cn } from "@/lib/utils";
 
-interface NavLinkCompatProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "className" | "href"> {
+interface NavLinkCompatProps extends Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  "className" | "href"
+> {
   to: string;
   end?: boolean;
   className?: string;

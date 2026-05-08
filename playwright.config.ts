@@ -24,10 +24,15 @@ const SUITE = (process.env.SUITE ?? "").toLowerCase();
 const SMOKE_RETRIES = Number(process.env.PW_SMOKE_RETRIES ?? 1);
 const FULL_RETRIES = Number(process.env.PW_FULL_RETRIES ?? 2);
 const RETRIES =
-  SUITE === "smoke" ? SMOKE_RETRIES :
-  SUITE === "full"  ? FULL_RETRIES  :
-  process.env.PW_RETRIES !== undefined ? Number(process.env.PW_RETRIES) :
-  isCI ? 2 : 0;
+  SUITE === "smoke"
+    ? SMOKE_RETRIES
+    : SUITE === "full"
+      ? FULL_RETRIES
+      : process.env.PW_RETRIES !== undefined
+        ? Number(process.env.PW_RETRIES)
+        : isCI
+          ? 2
+          : 0;
 
 export default defineConfig({
   testDir: "./e2e",

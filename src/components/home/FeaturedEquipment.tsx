@@ -7,7 +7,7 @@ import { trackEvent } from "@/lib/analytics";
 
 export default function FeaturedEquipment() {
   const { t } = useLang();
-  const featured = equipmentData.filter(e => e.featured).slice(0, 6);
+  const featured = equipmentData.filter((e) => e.featured).slice(0, 6);
 
   return (
     <section className="section-padding bg-muted/30">
@@ -15,11 +15,15 @@ export default function FeaturedEquipment() {
         <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4 flex-wrap">
           <div className="max-w-2xl">
             <p className="eyebrow mb-2 sm:mb-3">{t("Featured Equipment", "ফিচার্ড ইকুইপমেন্ট")}</p>
-            <h2 className="text-[1.625rem] sm:text-3xl md:text-4xl font-bold font-display leading-[1.15] tracking-tight text-balance">{t("Flagship machines, ready to mobilise.", "ফ্ল্যাগশিপ মেশিন, মোবিলাইজে প্রস্তুত।")}</h2>
+            <h2 className="text-[1.625rem] sm:text-3xl md:text-4xl font-bold font-display leading-[1.15] tracking-tight text-balance">
+              {t("Flagship machines, ready to mobilise.", "ফ্ল্যাগশিপ মেশিন, মোবিলাইজে প্রস্তুত।")}
+            </h2>
           </div>
           <Link
             to="/equipment"
-            onClick={() => trackEvent("view_full_fleet_click", { location: "home_featured_equipment" })}
+            onClick={() =>
+              trackEvent("view_full_fleet_click", { location: "home_featured_equipment" })
+            }
             className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors"
           >
             {t("View full fleet", "পুরো ফ্লিট দেখুন")} <ArrowRight className="w-4 h-4" />
@@ -27,9 +31,15 @@ export default function FeaturedEquipment() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr items-stretch">
-          {featured.map(eq => (
-            <div key={eq.id} className="group glass-card rounded-2xl overflow-hidden glass-hover flex flex-col h-full">
-              <Link to={`/equipment/${eq.category}/${eq.id}`} className="relative aspect-[4/3] overflow-hidden block">
+          {featured.map((eq) => (
+            <div
+              key={eq.id}
+              className="group glass-card rounded-2xl overflow-hidden glass-hover flex flex-col h-full"
+            >
+              <Link
+                to={`/equipment/${eq.category}/${eq.id}`}
+                className="relative aspect-[4/3] overflow-hidden block"
+              >
                 <SmartImage
                   src={eq.realPhotos?.[0] || eq.image}
                   alt={eq.name}
@@ -57,15 +67,27 @@ export default function FeaturedEquipment() {
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1.5 text-[10px]">
                   <span className="font-mono text-white/40 leading-none">{eq.id}</span>
                   <span className="hidden sm:inline text-white/30 leading-none">·</span>
-                  <span className="text-orange-400/70 leading-none break-words [overflow-wrap:anywhere]">{eq.categoryLabel}</span>
+                  <span className="text-orange-400/70 leading-none break-words [overflow-wrap:anywhere]">
+                    {eq.categoryLabel}
+                  </span>
                 </div>
-                <Link to={`/equipment/${eq.category}/${eq.id}`} className="text-base sm:text-lg font-semibold text-white hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]">
+                <Link
+                  to={`/equipment/${eq.category}/${eq.id}`}
+                  className="text-base sm:text-lg font-semibold text-white hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]"
+                >
                   {eq.name}
                 </Link>
                 {eq.banglaLabel && (
-                  <p lang="bn" className="text-xs text-white/50 mt-1 leading-relaxed break-words [overflow-wrap:anywhere]">{eq.banglaLabel}</p>
+                  <p
+                    lang="bn"
+                    className="text-xs text-white/50 mt-1 leading-relaxed break-words [overflow-wrap:anywhere]"
+                  >
+                    {eq.banglaLabel}
+                  </p>
                 )}
-                <p className="text-[13px] sm:text-sm text-white/40 mt-1.5 leading-relaxed break-words [overflow-wrap:anywhere]">{eq.capacity} · {eq.origin} · {eq.year || "—"}</p>
+                <p className="text-[13px] sm:text-sm text-white/40 mt-1.5 leading-relaxed break-words [overflow-wrap:anywhere]">
+                  {eq.capacity} · {eq.origin} · {eq.year || "—"}
+                </p>
 
                 <div className="mt-auto pt-4 flex items-stretch gap-3">
                   <a
@@ -74,14 +96,22 @@ export default function FeaturedEquipment() {
                     rel="noopener noreferrer"
                     className="flex-1 min-w-0 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-green-600 hover:bg-green-500 text-white text-xs font-semibold transition-colors shadow-lg shadow-green-900/20 min-h-[44px] text-center"
                   >
-                    <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+                    <svg
+                      className="w-3.5 h-3.5 flex-shrink-0"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                      <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+                    </svg>
                     <span className="leading-snug">{t("Rent Now", "ভাড়া নিন")}</span>
                   </a>
                   <Link
                     to={`/equipment/${eq.category}/${eq.id}`}
                     className="flex items-center justify-center gap-1 px-4 py-2.5 rounded-xl glass hover:bg-white/10 text-white/70 text-xs font-medium transition-colors min-h-[44px] flex-shrink-0"
                   >
-                    <span className="leading-snug">{t("Details", "বিস্তারিত")}</span> <ArrowRight className="w-3 h-3 flex-shrink-0" />
+                    <span className="leading-snug">{t("Details", "বিস্তারিত")}</span>{" "}
+                    <ArrowRight className="w-3 h-3 flex-shrink-0" />
                   </Link>
                 </div>
               </div>

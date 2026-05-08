@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useCallback, type MouseEvent, type PointerEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type MouseEvent,
+  type PointerEvent,
+} from "react";
 import { Link, useLocation } from "@/lib/router-compat";
 import { Menu, X, Phone, Mail, Globe } from "lucide-react";
 import { getWhatsAppQuoteUrl } from "@/data/equipment";
@@ -39,31 +46,39 @@ export default function Navbar() {
     };
   }, [onScroll]);
 
-  useEffect(() => { setIsOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   const closeMenu = useCallback(() => setIsOpen(false), []);
 
   const toggleMenu = useCallback(() => {
-    setIsOpen(open => !open);
+    setIsOpen((open) => !open);
   }, []);
 
-  const handleMenuPointerDown = useCallback((event: PointerEvent<HTMLButtonElement>) => {
-    if (event.pointerType === "mouse") return;
-    event.preventDefault();
-    ignoreNextClickRef.current = true;
-    toggleMenu();
-    window.setTimeout(() => {
-      ignoreNextClickRef.current = false;
-    }, 400);
-  }, [toggleMenu]);
-
-  const handleMenuClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
-    if (ignoreNextClickRef.current) {
+  const handleMenuPointerDown = useCallback(
+    (event: PointerEvent<HTMLButtonElement>) => {
+      if (event.pointerType === "mouse") return;
       event.preventDefault();
-      return;
-    }
-    toggleMenu();
-  }, [toggleMenu]);
+      ignoreNextClickRef.current = true;
+      toggleMenu();
+      window.setTimeout(() => {
+        ignoreNextClickRef.current = false;
+      }, 400);
+    },
+    [toggleMenu],
+  );
+
+  const handleMenuClick = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      if (ignoreNextClickRef.current) {
+        event.preventDefault();
+        return;
+      }
+      toggleMenu();
+    },
+    [toggleMenu],
+  );
 
   return (
     <header
@@ -74,13 +89,17 @@ export default function Navbar() {
       }`}
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`flex items-center justify-between transition-[height] duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${scrolled ? "h-[60px]" : "h-[72px]"}`}>
+        <div
+          className={`flex items-center justify-between transition-[height] duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${scrolled ? "h-[60px]" : "h-[72px]"}`}
+        >
           <AnimatedLogo size={scrolled ? 36 : 42} withWordmark asLink />
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-1">
-            {navLinks.map(link => {
-              const isActive = location.pathname === link.to || (link.to !== "/" && location.pathname.startsWith(link.to));
+            {navLinks.map((link) => {
+              const isActive =
+                location.pathname === link.to ||
+                (link.to !== "/" && location.pathname.startsWith(link.to));
               return (
                 <Link
                   key={link.to}
@@ -115,16 +134,34 @@ export default function Navbar() {
               <span className={lang === "bn" ? "text-orange-400" : "text-white/60"}>বাং</span>
             </button>
 
-            <a href="https://www.facebook.com/atdbtrade" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-500 transition-colors hover:scale-110 active:scale-95">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            <a
+              href="https://www.facebook.com/atdbtrade"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-500 transition-colors hover:scale-110 active:scale-95"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+              </svg>
             </a>
-            <a href="tel:+8801712106242" className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center text-white hover:bg-green-500 transition-colors hover:scale-110 active:scale-95">
+            <a
+              href="tel:+8801712106242"
+              className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center text-white hover:bg-green-500 transition-colors hover:scale-110 active:scale-95"
+            >
               <Phone className="w-4 h-4" />
             </a>
-            <a href="mailto:saifulaapi@gmail.com" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors hover:scale-110 active:scale-95">
+            <a
+              href="mailto:saifulaapi@gmail.com"
+              className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors hover:scale-110 active:scale-95"
+            >
               <Mail className="w-4 h-4" />
             </a>
-            <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="ml-2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-orange-500 text-white text-sm font-semibold hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-400/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+            <a
+              href={getWhatsAppQuoteUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-orange-500 text-white text-sm font-semibold hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-400/30 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
               {t("Get Quote", "কোটেশন নিন")}
             </a>
