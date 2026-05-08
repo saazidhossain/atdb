@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { waitForAppReady, forceEnglishLocale, FREEZE_CSS } from "./helpers";
 
 // ═══════════════════════════════════════════════════════════════════════
 // Hero / Stats / CTA visual regression — desktop + mobile
@@ -10,32 +11,17 @@ const VIEWPORTS = [
   { name: "mobile",  width: 390,  height: 844 },
 ] as const;
 
-const FREEZE_CSS = `
-  *, *::before, *::after {
-    animation-duration: 0s !important;
-    animation-delay: 0s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0s !important;
-    transition-delay: 0s !important;
-    caret-color: transparent !important;
-  }
-  /* Hide elements that cause flake but aren't part of hero layout */
-  video, [data-testid="whatsapp-fab"] { visibility: hidden !important; }
-`;
-
 async function prepHome(page: Page) {
-  // English locale for stable text width
-  await page.addInitScript(() => {
-    try { localStorage.setItem("atdb_lang", "en"); } catch { /* */ }
-  });
+  await forceEnglishLocale(page);
   await page.goto("/");
-  await page.waitForLoadState("domcontentloaded");
-  // Allow lazy hero video gating + font swap to settle
-  await page.evaluate(() => document.fonts?.ready);
-  await page.waitForTimeout(1200);
+  await waitForAppReady(page);
   await page.addStyleTag({ content: FREEZE_CSS });
-  // Force CountUp end-state by waiting past its longest duration (~2200ms)
-  await page.waitForTimeout(800);
+  // CountUp finishes within ~2.2s; wait for its final number to render.
+  await page
+    .locator('text=/^26\\+$/')
+    .first()
+    .waitFor({ state: "visible", timeout: 5000 })
+    .catch(() => { /* ignore */ });
   await page.evaluate(() => window.scrollTo(0, 0));
 }
 
