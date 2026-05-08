@@ -61,26 +61,24 @@ export default function PagePreloader() {
     const waitForEagerImages = async () => {
       const imgs = Array.from(
         document.querySelectorAll<HTMLImageElement>(
-          'img[loading="eager"], img[fetchpriority="high"]'
-        )
+          'img[loading="eager"], img[fetchpriority="high"]',
+        ),
       );
       await Promise.all(
         imgs.map((img) =>
           img.complete && img.naturalWidth > 0
             ? Promise.resolve()
             : (img.decode?.().catch(() => undefined) ??
-               new Promise<void>((r) => {
-                 img.addEventListener("load", () => r(), { once: true });
-                 img.addEventListener("error", () => r(), { once: true });
-               }))
-        )
+              new Promise<void>((r) => {
+                img.addEventListener("load", () => r(), { once: true });
+                img.addEventListener("error", () => r(), { once: true });
+              })),
+        ),
       );
     };
 
     const doubleRaf = () =>
-      new Promise<void>((r) =>
-        requestAnimationFrame(() => requestAnimationFrame(() => r()))
-      );
+      new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 
     // CountUp eases for ~1.6–2.2s; give 2.6s after load to settle.
     const waitForCountUp = () => new Promise<void>((r) => window.setTimeout(r, 2600));

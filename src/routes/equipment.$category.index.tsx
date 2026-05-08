@@ -42,7 +42,12 @@ export const Route = createFileRoute("/equipment/$category/")({
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
               { "@type": "ListItem", position: 2, name: "Equipment", item: `${SITE}/equipment` },
-              { "@type": "ListItem", position: 3, name: label, item: `${SITE}/equipment/${params.category}` },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: label,
+                item: `${SITE}/equipment/${params.category}`,
+              },
             ],
           }),
         },

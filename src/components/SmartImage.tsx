@@ -12,12 +12,7 @@ export default function SmartImage({
   const [loaded, setLoaded] = useState(false);
   return (
     <>
-      {!loaded && (
-        <span
-          aria-hidden
-          className="atdb-skel absolute inset-0 z-[1]"
-        />
-      )}
+      {!loaded && <span aria-hidden className="atdb-skel absolute inset-0 z-[1]" />}
       <img
         {...props}
         onLoad={(e) => {

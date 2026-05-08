@@ -40,7 +40,9 @@ export const Route = createFileRoute("/equipment/$category/$id")({
             additionalProperty: [
               { "@type": "PropertyValue", name: "Capacity", value: eq.capacity },
               { "@type": "PropertyValue", name: "Fuel", value: eq.fuel },
-              ...(eq.year ? [{ "@type": "PropertyValue", name: "Year", value: String(eq.year) }] : []),
+              ...(eq.year
+                ? [{ "@type": "PropertyValue", name: "Year", value: String(eq.year) }]
+                : []),
               { "@type": "PropertyValue", name: "Quantity Available", value: eq.quantity },
             ],
             offers: {
@@ -62,8 +64,18 @@ export const Route = createFileRoute("/equipment/$category/$id")({
             itemListElement: [
               { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
               { "@type": "ListItem", position: 2, name: "Equipment", item: `${SITE}/equipment` },
-              { "@type": "ListItem", position: 3, name: cat?.label ?? "Category", item: `${SITE}/equipment/${eq.category}` },
-              { "@type": "ListItem", position: 4, name: eq.name, item: `${SITE}/equipment/${eq.category}/${eq.id}` },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: cat?.label ?? "Category",
+                item: `${SITE}/equipment/${eq.category}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 4,
+                name: eq.name,
+                item: `${SITE}/equipment/${eq.category}/${eq.id}`,
+              },
             ],
           }),
         },

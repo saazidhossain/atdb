@@ -19,33 +19,39 @@ type Lang = "en" | "bn";
 
 // ─── Brand tokens ─────────────────────────────────────────────────────
 const BRAND = {
-  navy:    [16, 22, 32]   as [number, number, number],
-  navySub: [44, 52, 66]   as [number, number, number],
-  orange:  [245, 130, 32] as [number, number, number],
+  navy: [16, 22, 32] as [number, number, number],
+  navySub: [44, 52, 66] as [number, number, number],
+  orange: [245, 130, 32] as [number, number, number],
   orangeD: [200, 100, 20] as [number, number, number],
-  ink:     [30, 35, 45]   as [number, number, number],
-  body:    [60, 65, 75]   as [number, number, number],
-  muted:   [120, 125, 135]as [number, number, number],
-  hair:    [225, 228, 232]as [number, number, number],
-  panel:   [248, 249, 251]as [number, number, number],
-  white:   [255, 255, 255]as [number, number, number],
+  ink: [30, 35, 45] as [number, number, number],
+  body: [60, 65, 75] as [number, number, number],
+  muted: [120, 125, 135] as [number, number, number],
+  hair: [225, 228, 232] as [number, number, number],
+  panel: [248, 249, 251] as [number, number, number],
+  white: [255, 255, 255] as [number, number, number],
 };
 
-const MARGIN_X = 14;       // mm
-const HEADER_H = 36;       // mm
-const FOOTER_H = 14;       // mm
+const MARGIN_X = 14; // mm
+const HEADER_H = 36; // mm
+const FOOTER_H = 14; // mm
 
 const STR = {
   subtitle: "Heavy Equipment Rental & 1st-Class Civil Contractor  ·  Est. 2000",
-  addr:     "Corporate: House #319 (8F), Lane #8, East Kazi Para, Kafrul, Dhaka-1216  ·  Branch: Tangail-1900",
-  sheet:    "EQUIPMENT SPECIFICATION SHEET",
+  addr: "Corporate: House #319 (8F), Lane #8, East Kazi Para, Kafrul, Dhaka-1216  ·  Branch: Tangail-1900",
+  sheet: "EQUIPMENT SPECIFICATION SHEET",
   refLabel: "Quotation Ref:",
-  spec: "Specification", detail: "Detail",
-  category: "Category", brand: "Brand", model: "Model / Serial",
+  spec: "Specification",
+  detail: "Detail",
+  category: "Category",
+  brand: "Brand",
+  model: "Model / Serial",
   capacity: "Lifting / Operating Capacity",
-  origin: "Country of Origin", year: "Year of Manufacture",
-  fuel: "Engine / Fuel Type", qty: "Quantity Available",
-  notes: "Type / Configuration", asset: "Asset ID",
+  origin: "Country of Origin",
+  year: "Year of Manufacture",
+  fuel: "Engine / Fuel Type",
+  qty: "Quantity Available",
+  notes: "Type / Configuration",
+  asset: "Asset ID",
   certLabel: "Inspection Status",
   certValue: "Certified & Operator-Ready",
   galleryHeading: "Equipment Gallery — Multiple Angles",
@@ -59,11 +65,11 @@ const STR = {
   ctaBody:
     "Contact our rental desk for availability, daily/weekly/monthly pricing, operator scope, fuel " +
     "terms and site mobilisation. Quotes are typically issued the same business day.",
-  contactWa:    "WhatsApp:  +880 1712-106242",
+  contactWa: "WhatsApp:  +880 1712-106242",
   contactPhone: "Phone:     +880 1816-666067",
   contactEmail: "Email:     saifulaapi@gmail.com",
-  contactWeb:   "Website:   www.atdbtrade.com",
-  footerLeft:   "© ATDB Trade International  ·  Confidential",
+  contactWeb: "Website:   www.atdbtrade.com",
+  footerLeft: "© ATDB Trade International  ·  Confidential",
   pageOf: (a: number, b: number) => `Page ${a} of ${b}`,
   generated: "Generated",
 } as const;
@@ -82,9 +88,7 @@ export function makeRef(id: string): string {
 }
 
 // ─── Image loader → PNG data URL (jsPDF can't embed WEBP reliably) ────
-async function loadImage(
-  url: string
-): Promise<{ dataUrl: string; w: number; h: number } | null> {
+async function loadImage(url: string): Promise<{ dataUrl: string; w: number; h: number } | null> {
   try {
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {
       const i = new Image();
@@ -107,7 +111,7 @@ async function loadImage(
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     ctx.imageSmoothingEnabled = true;
-    (ctx as any).imageSmoothingQuality = "high";
+    ctx.imageSmoothingQuality = "high";
     ctx.drawImage(img, 0, 0, cw, ch);
     // JPEG keeps the embedded asset small while preserving photo quality.
     return { dataUrl: canvas.toDataURL("image/jpeg", 0.92), w: cw, h: ch };
@@ -123,7 +127,10 @@ async function loadImage(
 function drawCoverImage(
   doc: jsPDF,
   img: { dataUrl: string; w: number; h: number },
-  x: number, y: number, bw: number, bh: number
+  x: number,
+  y: number,
+  bw: number,
+  bh: number,
 ) {
   const ratio = img.w / img.h;
   const boxRatio = bw / bh;
@@ -146,7 +153,9 @@ function drawCoverImage(
   doc.rect(x, y, bw, bh, "F");
   try {
     doc.addImage(img.dataUrl, "JPEG", dx, dy, dw, dh, undefined, "FAST");
-  } catch { /* ignore bad images */ }
+  } catch {
+    /* ignore bad images */
+  }
   doc.setDrawColor(...BRAND.hair);
   doc.setLineWidth(0.3);
   doc.rect(x, y, bw, bh);
@@ -167,7 +176,9 @@ async function drawHeader(doc: jsPDF, logo: Awaited<ReturnType<typeof loadImage>
       const lh = 22;
       const lw = Math.min(34, lh * ratio);
       doc.addImage(logo.dataUrl, "JPEG", MARGIN_X, (HEADER_H - lh) / 2, lw, lh);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
 
   doc.setFont("helvetica", "bold");
@@ -183,8 +194,11 @@ async function drawHeader(doc: jsPDF, logo: Awaited<ReturnType<typeof loadImage>
 
   // Top-right timestamp
   const stamp = new Date().toLocaleString("en-GB", {
-    year: "numeric", month: "short", day: "2-digit",
-    hour: "2-digit", minute: "2-digit",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
   });
   doc.setFontSize(7.5);
   doc.setTextColor(...BRAND.orange);
@@ -223,10 +237,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   const logo = await loadImage(logoMark);
 
   // Pre-load images we need
-  const allShots = [
-    ...(eq.realPhotos || []),
-    eq.image,
-  ].filter(Boolean) as string[];
+  const allShots = [...(eq.realPhotos || []), eq.image].filter(Boolean) as string[];
   const heroImg = allShots.length ? await loadImage(allShots[0]) : null;
   const galleryImgs = await Promise.all(allShots.slice(0, 4).map(loadImage));
 
@@ -301,11 +312,11 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   doc.rect(factsX, heroY, factsW, heroH);
 
   const facts: Array<[string, string]> = [
-    ["CAPACITY",       eq.capacity],
-    ["YEAR",           eq.year ? String(eq.year) : "—"],
-    ["ORIGIN",         eq.origin],
-    ["FUEL",           eq.fuel],
-    ["AVAILABLE",      fmtQty(eq.quantity)],
+    ["CAPACITY", eq.capacity],
+    ["YEAR", eq.year ? String(eq.year) : "—"],
+    ["ORIGIN", eq.origin],
+    ["FUEL", eq.fuel],
+    ["AVAILABLE", fmtQty(eq.quantity)],
   ];
   const rowH = (heroH - 6) / facts.length;
   facts.forEach(([k, v], i) => {
@@ -323,7 +334,10 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     doc.setFont("helvetica", "bold");
     // Auto-shrink long values so 50-Tons / "Backhoe Loader" never clip.
     let valSize = 10;
-    while (valSize > 7.5 && doc.getStringUnitWidth(v) * valSize / doc.internal.scaleFactor > factsW - 8) {
+    while (
+      valSize > 7.5 &&
+      (doc.getStringUnitWidth(v) * valSize) / doc.internal.scaleFactor > factsW - 8
+    ) {
       valSize -= 0.5;
     }
     doc.setFontSize(valSize);
@@ -338,16 +352,16 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   y += 6;
 
   const specs: Array<[string, string]> = [
-    [STR.asset,    eq.id],
+    [STR.asset, eq.id],
     [STR.category, eq.categoryLabel],
-    [STR.brand,    eq.brand],
-    [STR.model,    eq.model],
+    [STR.brand, eq.brand],
+    [STR.model, eq.model],
     [STR.capacity, eq.capacity],
-    [STR.origin,   eq.origin],
-    [STR.year,     eq.year ? String(eq.year) : "—"],
-    [STR.fuel,     eq.fuel],
-    [STR.qty,      fmtQty(eq.quantity)],
-    [STR.notes,    eq.notes || "—"],
+    [STR.origin, eq.origin],
+    [STR.year, eq.year ? String(eq.year) : "—"],
+    [STR.fuel, eq.fuel],
+    [STR.qty, fmtQty(eq.quantity)],
+    [STR.notes, eq.notes || "—"],
     [STR.certLabel, STR.certValue],
   ];
 
@@ -357,11 +371,18 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     body: specs,
     margin: { left: MARGIN_X, right: MARGIN_X },
     headStyles: {
-      fillColor: BRAND.navy, textColor: BRAND.white,
-      fontStyle: "bold", fontSize: 9, halign: "left", cellPadding: 3.5,
+      fillColor: BRAND.navy,
+      textColor: BRAND.white,
+      fontStyle: "bold",
+      fontSize: 9,
+      halign: "left",
+      cellPadding: 3.5,
     },
     bodyStyles: {
-      fontSize: 9, textColor: BRAND.body, cellPadding: 3.5, valign: "middle",
+      fontSize: 9,
+      textColor: BRAND.body,
+      cellPadding: 3.5,
+      valign: "middle",
     },
     alternateRowStyles: { fillColor: BRAND.panel },
     columnStyles: {
@@ -371,10 +392,15 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     styles: { lineColor: BRAND.hair, lineWidth: 0.2 },
   });
 
-  y = (doc as any).lastAutoTable.finalY + 10;
+  const autoTableDoc = doc as jsPDF & { lastAutoTable?: { finalY: number } };
+  y = (autoTableDoc.lastAutoTable?.finalY ?? y) + 10;
 
   // ── Section: Description ───────────────────────────────────────────
-  if (y > H - FOOTER_H - 60) { doc.addPage(); await drawHeader(doc, logo); y = HEADER_H + 10; }
+  if (y > H - FOOTER_H - 60) {
+    doc.addPage();
+    await drawHeader(doc, logo);
+    y = HEADER_H + 10;
+  }
   drawSectionHeading(doc, STR.descHeading.toUpperCase(), y);
   y += 6;
 
@@ -391,7 +417,11 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
 
   // ── Section: Gallery (page 2) ──────────────────────────────────────
   if (galleryImgs.some(Boolean)) {
-    if (y > H - FOOTER_H - 90) { doc.addPage(); await drawHeader(doc, logo); y = HEADER_H + 10; }
+    if (y > H - FOOTER_H - 90) {
+      doc.addPage();
+      await drawHeader(doc, logo);
+      y = HEADER_H + 10;
+    }
     drawSectionHeading(doc, STR.galleryHeading.toUpperCase(), y);
     y += 6;
 
@@ -427,7 +457,11 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
 
   // ── Section: Contact / CTA ─────────────────────────────────────────
   const ctaH = 38;
-  if (y > H - FOOTER_H - ctaH - 6) { doc.addPage(); await drawHeader(doc, logo); y = HEADER_H + 10; }
+  if (y > H - FOOTER_H - ctaH - 6) {
+    doc.addPage();
+    await drawHeader(doc, logo);
+    y = HEADER_H + 10;
+  }
 
   doc.setFillColor(...BRAND.navy);
   doc.roundedRect(MARGIN_X, y, contentW, ctaH, 2, 2, "F");
@@ -453,11 +487,11 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   const baseX = MARGIN_X + 7;
   const baseY = y + ctaH - 9;
   doc.setTextColor(...BRAND.orange);
-  doc.text(STR.contactWa,    baseX,                 baseY);
+  doc.text(STR.contactWa, baseX, baseY);
   doc.setTextColor(...BRAND.white);
-  doc.text(STR.contactPhone, baseX + colW,          baseY);
-  doc.text(STR.contactEmail, baseX + colW * 2,      baseY);
-  doc.text(STR.contactWeb,   baseX + colW * 3,      baseY);
+  doc.text(STR.contactPhone, baseX + colW, baseY);
+  doc.text(STR.contactEmail, baseX + colW * 2, baseY);
+  doc.text(STR.contactWeb, baseX + colW * 3, baseY);
 
   // ── Paginate footer on every page ──────────────────────────────────
   const totalPages = doc.getNumberOfPages();

@@ -30,17 +30,18 @@ export default function HeroSkeleton() {
     };
 
     const fonts =
-      (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts
-        ?.ready?.then(() => undefined)
+      (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready
+        ?.then(() => undefined)
         .catch(() => undefined) ?? Promise.resolve();
 
     const lcp = new Promise<void>((resolve) => {
-      const img = document.querySelector<HTMLImageElement>(
-        'img[fetchpriority="high"]'
-      );
+      const img = document.querySelector<HTMLImageElement>('img[fetchpriority="high"]');
       if (!img) return resolve();
       if (img.complete && img.naturalWidth > 0) return resolve();
-      img.decode?.().then(() => resolve()).catch(() => resolve());
+      img
+        .decode?.()
+        .then(() => resolve())
+        .catch(() => resolve());
       img.addEventListener("load", () => resolve(), { once: true });
       img.addEventListener("error", () => resolve(), { once: true });
     });

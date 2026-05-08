@@ -4,10 +4,7 @@
  */
 export default function ScrollProgress() {
   return (
-    <div
-      aria-hidden
-      className="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none"
-    >
+    <div aria-hidden className="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none">
       <div
         className="h-full bg-gradient-to-r from-orange-500 via-amber-400 to-orange-500 origin-left"
         style={{

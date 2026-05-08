@@ -42,7 +42,7 @@ export default function StandardsStrip() {
           <h2 className="text-[clamp(1.6rem,5.5vw,2.25rem)] font-bold font-display leading-tight text-balance">
             {t(
               "Audited, classed and tender-ready credentials.",
-              "অডিটেড, শ্রেণিভুক্ত ও টেন্ডার-প্রস্তুত ক্রেডেনশিয়াল।"
+              "অডিটেড, শ্রেণিভুক্ত ও টেন্ডার-প্রস্তুত ক্রেডেনশিয়াল।",
             )}
           </h2>
           <div className="mx-auto mt-5 h-px w-24 bg-gradient-to-r from-transparent via-orange-400/50 to-transparent" />

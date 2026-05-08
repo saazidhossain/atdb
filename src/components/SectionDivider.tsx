@@ -31,7 +31,7 @@ export default function SectionDivider({ className = "" }: { className?: string 
           }
         }
       },
-      { rootMargin: "0px 0px -15% 0px", threshold: 0.1 }
+      { rootMargin: "0px 0px -15% 0px", threshold: 0.1 },
     );
     io.observe(el);
     return () => io.disconnect();
@@ -55,8 +55,7 @@ export default function SectionDivider({ className = "" }: { className?: string 
               "linear-gradient(90deg, transparent 0%, hsl(25 95% 55% / 0.0) 10%, hsl(25 95% 55% / 0.6) 50%, hsl(25 95% 55% / 0.0) 90%, transparent 100%)",
             transform: shown ? "scaleX(1)" : "scaleX(0)",
             transformOrigin: "center",
-            transition:
-              "transform 900ms cubic-bezier(0.2,0.7,0.2,1), opacity 600ms ease",
+            transition: "transform 900ms cubic-bezier(0.2,0.7,0.2,1), opacity 600ms ease",
             opacity: shown ? 1 : 0.0,
           }}
         />
@@ -69,8 +68,7 @@ export default function SectionDivider({ className = "" }: { className?: string 
             width: "120px",
             height: "8px",
             borderRadius: "9999px",
-            background:
-              "radial-gradient(closest-side, hsl(25 95% 60% / 0.35), transparent)",
+            background: "radial-gradient(closest-side, hsl(25 95% 60% / 0.35), transparent)",
             opacity: shown ? 1 : 0,
             transition: "opacity 700ms ease 200ms",
             pointerEvents: "none",

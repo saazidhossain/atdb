@@ -53,26 +53,33 @@ export default function HeroMedia() {
     let cancelled = false;
 
     const ric =
-      (window as Window & { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number })
-        .requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 800));
+      (
+        window as Window & {
+          requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+        }
+      ).requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 800));
 
-    const idleHandle = ric(() => {
-      if (cancelled || !containerRef.current) return;
-      const io = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((e) => e.isIntersecting)) {
-            setMountVideo(true);
-            io.disconnect();
-          }
-        },
-        { rootMargin: "200px" }
-      );
-      io.observe(containerRef.current);
-    }, { timeout: 1500 });
+    const idleHandle = ric(
+      () => {
+        if (cancelled || !containerRef.current) return;
+        const io = new IntersectionObserver(
+          (entries) => {
+            if (entries.some((e) => e.isIntersecting)) {
+              setMountVideo(true);
+              io.disconnect();
+            }
+          },
+          { rootMargin: "200px" },
+        );
+        io.observe(containerRef.current);
+      },
+      { timeout: 1500 },
+    );
 
     return () => {
       cancelled = true;
-      const cic = (window as Window & { cancelIdleCallback?: (h: number) => void }).cancelIdleCallback;
+      const cic = (window as Window & { cancelIdleCallback?: (h: number) => void })
+        .cancelIdleCallback;
       if (cic && typeof idleHandle === "number") cic(idleHandle);
     };
   }, []);
@@ -100,19 +107,28 @@ export default function HeroMedia() {
     if (!v) return;
     let cancelled = false;
 
-    const markReady = () => { if (!cancelled) setVideoReady(true); };
+    const markReady = () => {
+      if (!cancelled) setVideoReady(true);
+    };
 
     const tryStart = async () => {
-      try { await v.play(); } catch { /* user-gesture or autoplay block — image stays */ return; }
-      const rvfc = (v as HTMLVideoElement & {
-        requestVideoFrameCallback?: (cb: () => void) => number;
-      }).requestVideoFrameCallback;
+      try {
+        await v.play();
+      } catch {
+        /* user-gesture or autoplay block — image stays */ return;
+      }
+      const rvfc = (
+        v as HTMLVideoElement & {
+          requestVideoFrameCallback?: (cb: () => void) => number;
+        }
+      ).requestVideoFrameCallback;
       if (typeof rvfc === "function") {
         rvfc.call(v, markReady);
       } else {
         // Fallback: loadeddata + 1 rAF ≈ first paint
         if (v.readyState >= 2) requestAnimationFrame(markReady);
-        else v.addEventListener("loadeddata", () => requestAnimationFrame(markReady), { once: true });
+        else
+          v.addEventListener("loadeddata", () => requestAnimationFrame(markReady), { once: true });
       }
     };
 

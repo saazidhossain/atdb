@@ -50,7 +50,7 @@ export default function CountUp({ end, suffix = "", duration = 1800, className =
       // enters, with a 64px lead-in so the count begins just before the
       // card is fully on-screen. Works for short mobile viewports where
       // the stat row never reaches a 30% visibility ratio without scroll.
-      { threshold: 0, rootMargin: "0px 0px -64px 0px" }
+      { threshold: 0, rootMargin: "0px 0px -64px 0px" },
     );
     io.observe(el);
 
@@ -63,7 +63,6 @@ export default function CountUp({ end, suffix = "", duration = 1800, className =
       window.clearTimeout(safety);
     };
   }, []);
-
 
   useEffect(() => {
     if (!started) return;
@@ -85,7 +84,8 @@ export default function CountUp({ end, suffix = "", duration = 1800, className =
 
   return (
     <span ref={ref} className={className}>
-      {value}{suffix}
+      {value}
+      {suffix}
     </span>
   );
 }

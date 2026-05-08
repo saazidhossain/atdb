@@ -1,4 +1,13 @@
-import { useEffect, useRef, useState, Children, cloneElement, isValidElement, type ReactNode, type ReactElement } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  Children,
+  cloneElement,
+  isValidElement,
+  type ReactNode,
+  type ReactElement,
+} from "react";
 
 interface Props {
   children: ReactNode;
@@ -36,7 +45,7 @@ export default function RevealOnScroll({ children, className = "", delay = 0, st
           }
         }
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 }
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 },
     );
     io.observe(el);
     return () => io.disconnect();

@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     console.error(
       `[ErrorBoundary] crash at route="${route}" boundary="${this.props.routeName ?? "root"}"\n` +
         `${error.name}: ${error.message}\n` +
-        `Component stack:${info.componentStack}`
+        `Component stack:${info.componentStack}`,
     );
   }
 
@@ -46,8 +46,18 @@ export default class ErrorBoundary extends Component<Props, State> {
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-6">
         <div className="max-w-md text-center">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-orange-500/15 text-orange-400 mb-5">
-            <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7" stroke="currentColor" strokeWidth="2">
-              <path d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className="w-7 h-7"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path
+                d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
           <h1 className="text-2xl font-bold mb-2">Something went wrong</h1>

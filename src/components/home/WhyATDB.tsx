@@ -5,22 +5,53 @@ export default function WhyATDB() {
   const { t } = useLang();
 
   const reasons = [
-    { icon: Shield, title: t("Reliable Fleet", "নির্ভরযোগ্য ফ্লিট"), desc: t("26 years of mission-critical maintenance and operator training keep every unit job-ready.", "২৬ বছরের মেইনটেন্যান্স ও অপারেটর ট্রেনিং — প্রতিটি ইউনিট সবসময় জব-রেডি।") },
-    { icon: Zap, title: t("Safety First", "সেফটি ফার্স্ট"), desc: t("City Inspection Services certified equipment. ISO-aligned operating protocols on every site.", "City Inspection Services সার্টিফাইড। প্রতিটি সাইটে ISO-সমন্বিত প্রটোকল।") },
-    { icon: Phone, title: t("Instant WhatsApp Service", "ইন্সট্যান্ট হোয়াটসঅ্যাপ সার্ভিস"), desc: t("Direct line to leadership. Quotations and confirmations in minutes, not days.", "নেতৃত্বের সাথে সরাসরি লাইন। কোটেশন ও কনফার্মেশন মিনিটে।") },
-    { icon: DollarSign, title: t("Transparent Pricing", "স্বচ্ছ মূল্য"), desc: t("Simple per-day & per-project rates. No hidden mobilisation or fuel surprises.", "সহজ পার-ডে ও পার-প্রজেক্ট রেট। কোনো হিডেন চার্জ নেই।") },
+    {
+      icon: Shield,
+      title: t("Reliable Fleet", "নির্ভরযোগ্য ফ্লিট"),
+      desc: t(
+        "26 years of mission-critical maintenance and operator training keep every unit job-ready.",
+        "২৬ বছরের মেইনটেন্যান্স ও অপারেটর ট্রেনিং — প্রতিটি ইউনিট সবসময় জব-রেডি।",
+      ),
+    },
+    {
+      icon: Zap,
+      title: t("Safety First", "সেফটি ফার্স্ট"),
+      desc: t(
+        "City Inspection Services certified equipment. ISO-aligned operating protocols on every site.",
+        "City Inspection Services সার্টিফাইড। প্রতিটি সাইটে ISO-সমন্বিত প্রটোকল।",
+      ),
+    },
+    {
+      icon: Phone,
+      title: t("Instant WhatsApp Service", "ইন্সট্যান্ট হোয়াটসঅ্যাপ সার্ভিস"),
+      desc: t(
+        "Direct line to leadership. Quotations and confirmations in minutes, not days.",
+        "নেতৃত্বের সাথে সরাসরি লাইন। কোটেশন ও কনফার্মেশন মিনিটে।",
+      ),
+    },
+    {
+      icon: DollarSign,
+      title: t("Transparent Pricing", "স্বচ্ছ মূল্য"),
+      desc: t(
+        "Simple per-day & per-project rates. No hidden mobilisation or fuel surprises.",
+        "সহজ পার-ডে ও পার-প্রজেক্ট রেট। কোনো হিডেন চার্জ নেই।",
+      ),
+    },
   ];
-
-
 
   return (
     <section className="section-padding bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mb-12">
           <p className="eyebrow mb-3">{t("Why ATDB", "কেন ATDB")}</p>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-display">{t("Certified, on-site, on-time.", "সার্টিফাইড, অন-সাইট, অন-টাইম।")}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-display">
+            {t("Certified, on-site, on-time.", "সার্টিফাইড, অন-সাইট, অন-টাইম।")}
+          </h2>
           <p className="text-white/50 leading-relaxed">
-            {t("Every machine is certified, every operator trained, and every quotation lands on WhatsApp within minutes.", "প্রতিটি মেশিন সার্টিফাইড, প্রতিটি অপারেটর প্রশিক্ষিত — প্রতিটি কোটেশন মিনিটেই WhatsApp-এ।")}
+            {t(
+              "Every machine is certified, every operator trained, and every quotation lands on WhatsApp within minutes.",
+              "প্রতিটি মেশিন সার্টিফাইড, প্রতিটি অপারেটর প্রশিক্ষিত — প্রতিটি কোটেশন মিনিটেই WhatsApp-এ।",
+            )}
           </p>
         </div>
 

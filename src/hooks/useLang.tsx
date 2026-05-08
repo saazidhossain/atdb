@@ -26,12 +26,18 @@ export function LangProvider({ children }: { children: ReactNode }) {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored === "bn" || stored === "en") setLangState(stored);
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   const setLang = (l: Lang) => {
     setLangState(l);
-    try { window.localStorage.setItem(STORAGE_KEY, l); } catch { /* ignore */ }
+    try {
+      window.localStorage.setItem(STORAGE_KEY, l);
+    } catch {
+      /* ignore */
+    }
   };
 
   useEffect(() => {
@@ -43,11 +49,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
 
   const t = (en: string, bn: string) => (lang === "bn" ? bn : en);
 
-  return (
-    <LangContext.Provider value={{ lang, setLang, t }}>
-      {children}
-    </LangContext.Provider>
-  );
+  return <LangContext.Provider value={{ lang, setLang, t }}>{children}</LangContext.Provider>;
 }
 
 export function useLang() {

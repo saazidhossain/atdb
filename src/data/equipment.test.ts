@@ -4,11 +4,11 @@ import type { EquipmentCategorySlug } from "./equipment";
 
 // ── Allowed values per category ──────────────────────────────────────
 const ALLOWED_BRANDS: Record<EquipmentCategorySlug, string[]> = {
-  cranes:     ["Liebherr", "Kato"],
-  rollers:    ["Sakai", "Dynapac", "Bomag", "Hawa", "Advance"],
+  cranes: ["Liebherr", "Kato"],
+  rollers: ["Sakai", "Dynapac", "Bomag", "Hawa", "Advance"],
   excavators: ["Caterpillar", "Komatsu"],
-  loaders:    ["CASE", "XCMG", "JCB"],
-  support:    ["Honda", "Zhejiang", "TATA"],
+  loaders: ["CASE", "XCMG", "JCB"],
+  support: ["Honda", "Zhejiang", "TATA"],
 };
 
 const ID_PREFIX: Record<EquipmentCategorySlug, string> = {
@@ -127,11 +127,49 @@ describe("Equipment data integrity", () => {
   // ── Snapshot: expected items per the ATDB Profile PDF ──────────────
 
   const EXPECTED = {
-    cranes: { ids: ["ATDB-CR-001","ATDB-CR-002","ATDB-CR-003","ATDB-CR-004","ATDB-CR-005","ATDB-CR-006","ATDB-CR-007"], count: 7 },
-    rollers: { ids: ["ATDB-RR-001","ATDB-RR-002","ATDB-RR-003","ATDB-RR-004","ATDB-RR-005","ATDB-RR-006","ATDB-RR-007","ATDB-RR-008","ATDB-RR-009"], count: 9 },
-    excavators: { ids: ["ATDB-EX-001","ATDB-EX-002","ATDB-EX-003"], count: 3 },
-    loaders: { ids: ["ATDB-LD-001","ATDB-LD-002","ATDB-LD-003"], count: 3 },
-    support: { ids: ["ATDB-SP-001","ATDB-SP-002","ATDB-SP-003","ATDB-SP-004","ATDB-SP-005","ATDB-SP-006","ATDB-SP-007","ATDB-SP-008","ATDB-SP-009","ATDB-SP-010"], count: 10 },
+    cranes: {
+      ids: [
+        "ATDB-CR-001",
+        "ATDB-CR-002",
+        "ATDB-CR-003",
+        "ATDB-CR-004",
+        "ATDB-CR-005",
+        "ATDB-CR-006",
+        "ATDB-CR-007",
+      ],
+      count: 7,
+    },
+    rollers: {
+      ids: [
+        "ATDB-RR-001",
+        "ATDB-RR-002",
+        "ATDB-RR-003",
+        "ATDB-RR-004",
+        "ATDB-RR-005",
+        "ATDB-RR-006",
+        "ATDB-RR-007",
+        "ATDB-RR-008",
+        "ATDB-RR-009",
+      ],
+      count: 9,
+    },
+    excavators: { ids: ["ATDB-EX-001", "ATDB-EX-002", "ATDB-EX-003"], count: 3 },
+    loaders: { ids: ["ATDB-LD-001", "ATDB-LD-002", "ATDB-LD-003"], count: 3 },
+    support: {
+      ids: [
+        "ATDB-SP-001",
+        "ATDB-SP-002",
+        "ATDB-SP-003",
+        "ATDB-SP-004",
+        "ATDB-SP-005",
+        "ATDB-SP-006",
+        "ATDB-SP-007",
+        "ATDB-SP-008",
+        "ATDB-SP-009",
+        "ATDB-SP-010",
+      ],
+      count: 10,
+    },
   } as const;
 
   for (const [slug, spec] of Object.entries(EXPECTED)) {
@@ -203,7 +241,13 @@ describe("makeRef – quotation reference format", () => {
 
 // ── Route coverage — every category slug maps to a valid route ────────
 describe("Route data integrity", () => {
-  const CATEGORY_SLUGS: EquipmentCategorySlug[] = ["cranes", "rollers", "excavators", "loaders", "support"];
+  const CATEGORY_SLUGS: EquipmentCategorySlug[] = [
+    "cranes",
+    "rollers",
+    "excavators",
+    "loaders",
+    "support",
+  ];
 
   it("every category slug has at least one equipment item", () => {
     for (const slug of CATEGORY_SLUGS) {
