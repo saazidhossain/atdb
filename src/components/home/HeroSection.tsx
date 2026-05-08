@@ -55,7 +55,7 @@ export default function HeroSection() {
           Buttons share min-height + base classes so they align pixel-perfect.
         */}
         <div
-          className="mt-8 sm:mt-10 md:mt-12 grid w-full max-w-md grid-cols-1 gap-3 xs:grid-cols-2 sm:flex sm:max-w-none sm:flex-wrap sm:items-stretch sm:gap-4 animate-fade-in"
+          className="mt-8 sm:mt-10 md:mt-12 grid w-full max-w-md grid-cols-1 gap-3 min-[480px]:grid-cols-2 sm:flex sm:max-w-none sm:flex-wrap sm:items-stretch sm:gap-4 animate-fade-in"
           style={{ animationDelay: "800ms", animationFillMode: "both" }}
         >
           <Link
