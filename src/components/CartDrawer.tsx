@@ -103,7 +103,7 @@ export default function CartDrawer() {
                 <>
                   {items.map(it => (
                     <div key={it.id} className="glass-card rounded-xl p-3 flex gap-3">
-                      {it.image && <img src={it.image} alt={it.name} className="w-16 h-16 rounded-lg object-cover" />}
+                      {it.image && <img src={it.image} alt={it.name} loading="lazy" decoding="async" className="w-16 h-16 rounded-lg object-cover" />}
                       <div className="flex-1 min-w-0">
                         <p className="text-[10px] font-mono text-orange-300/80">{it.id}</p>
                         <p className="text-sm font-semibold text-white line-clamp-2">{it.name}</p>
