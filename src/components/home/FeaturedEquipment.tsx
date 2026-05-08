@@ -10,10 +10,10 @@ export default function FeaturedEquipment() {
   return (
     <section className="section-padding bg-muted/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
-          <div>
-            <p className="eyebrow mb-3">{t("Featured Equipment", "ফিচার্ড ইকুইপমেন্ট")}</p>
-            <h2 className="text-3xl md:text-4xl font-bold font-display">{t("Flagship machines, ready to mobilise.", "ফ্ল্যাগশিপ মেশিন, মোবিলাইজে প্রস্তুত।")}</h2>
+        <div className="flex items-end justify-between mb-8 sm:mb-10 gap-4 flex-wrap">
+          <div className="max-w-2xl">
+            <p className="eyebrow mb-2 sm:mb-3">{t("Featured Equipment", "ফিচার্ড ইকুইপমেন্ট")}</p>
+            <h2 className="text-[1.625rem] sm:text-3xl md:text-4xl font-bold font-display leading-[1.15] tracking-tight text-balance">{t("Flagship machines, ready to mobilise.", "ফ্ল্যাগশিপ মেশিন, মোবিলাইজে প্রস্তুত।")}</h2>
           </div>
           <Link to="/equipment" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors">
             {t("View full fleet", "পুরো ফ্লিট দেখুন")} <ArrowRight className="w-4 h-4" />
@@ -47,19 +47,19 @@ export default function FeaturedEquipment() {
                 )}
               </Link>
 
-              <div className="p-5 flex-1 flex flex-col min-w-0">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[10px] font-mono text-white/40">{eq.id}</span>
-                  <span className="text-[10px] text-white/30">·</span>
-                  <span className="text-[10px] text-orange-400/70 truncate">{eq.categoryLabel}</span>
+              <div className="p-4 sm:p-5 flex-1 flex flex-col min-w-0">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-[10px] font-mono text-white/40 leading-none">{eq.id}</span>
+                  <span className="text-[10px] text-white/30 leading-none">·</span>
+                  <span className="text-[10px] text-orange-400/70 truncate leading-none">{eq.categoryLabel}</span>
                 </div>
-                <Link to={`/equipment/${eq.category}/${eq.id}`} className="text-lg font-semibold text-white hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]">
+                <Link to={`/equipment/${eq.category}/${eq.id}`} className="text-base sm:text-lg font-semibold text-white hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]">
                   {eq.name}
                 </Link>
                 {eq.banglaLabel && (
-                  <p lang="bn" className="text-xs text-white/50 mt-0.5 break-words [overflow-wrap:anywhere]">{eq.banglaLabel}</p>
+                  <p lang="bn" className="text-xs text-white/50 mt-1 leading-relaxed break-words [overflow-wrap:anywhere]">{eq.banglaLabel}</p>
                 )}
-                <p className="text-sm text-white/40 mt-1 break-words [overflow-wrap:anywhere]">{eq.capacity} · {eq.origin} · {eq.year || "—"}</p>
+                <p className="text-[13px] sm:text-sm text-white/40 mt-1.5 leading-relaxed break-words [overflow-wrap:anywhere]">{eq.capacity} · {eq.origin} · {eq.year || "—"}</p>
 
                 <div className="mt-auto pt-4 flex items-stretch gap-3">
                   <a
