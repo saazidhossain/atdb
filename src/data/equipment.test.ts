@@ -200,3 +200,75 @@ describe("makeRef – quotation reference format", () => {
     });
   });
 });
+
+// ── Route coverage — every category slug maps to a valid route ────────
+describe("Route data integrity", () => {
+  const CATEGORY_SLUGS: EquipmentCategorySlug[] = ["cranes", "rollers", "excavators", "loaders", "support"];
+
+  it("every category slug has at least one equipment item", () => {
+    for (const slug of CATEGORY_SLUGS) {
+      const items = equipmentData.filter((e) => e.category === slug);
+      expect(items.length, `no items for category ${slug}`).toBeGreaterThan(0);
+    }
+  });
+
+  it("equipment routes are derivable (category/id pair is unique)", () => {
+    const routes = equipmentData.map((e) => `${e.category}/${e.id}`);
+    expect(routes.length).toBe(new Set(routes).size);
+  });
+
+  it("every item has a valid image path (starts with /)", () => {
+    for (const e of equipmentData) {
+      expect(e.image, `${e.id} image`).toMatch(/^\//);
+    }
+  });
+
+  it("real photos paths start with /equipment/", () => {
+    for (const e of equipmentData) {
+      if (e.realPhotos) {
+        for (const p of e.realPhotos) {
+          expect(p, `${e.id} realPhoto`).toMatch(/^\/equipment\//);
+        }
+      }
+    }
+  });
+});
+
+// ── Language / bilingual coverage ────────────────────────────────────
+describe("Bilingual support", () => {
+  it("every item with banglaLabel has non-empty Bengali text", () => {
+    const withBangla = equipmentData.filter((e) => e.banglaLabel);
+    for (const e of withBangla) {
+      expect(e.banglaLabel!.length, `${e.id} banglaLabel empty`).toBeGreaterThan(0);
+      // Should contain at least one Bengali character
+      expect(e.banglaLabel, `${e.id} banglaLabel not Bengali`).toMatch(/[\u0980-\u09FF]/);
+    }
+  });
+
+  it("equipmentCategories have bangla labels", () => {
+    for (const cat of equipmentCategories) {
+      expect(cat.bangla, `${cat.slug} missing bangla`).toMatch(/[\u0980-\u09FF]/);
+    }
+  });
+});
+
+// ── PDF generator data requirements ──────────────────────────────────
+describe("PDF generator prerequisites", () => {
+  it("every item has required fields for PDF generation", () => {
+    for (const e of equipmentData) {
+      expect(e.name, `${e.id} name`).toBeTruthy();
+      expect(e.brand, `${e.id} brand`).toBeTruthy();
+      expect(e.model, `${e.id} model`).toBeTruthy();
+      expect(e.capacity, `${e.id} capacity`).toBeTruthy();
+      expect(e.origin, `${e.id} origin`).toBeTruthy();
+      expect(e.fuel, `${e.id} fuel`).toBeTruthy();
+      expect(e.quantity, `${e.id} quantity`).toBeTruthy();
+    }
+  });
+
+  it("quantity is a numeric string", () => {
+    for (const e of equipmentData) {
+      expect(parseInt(e.quantity, 10), `${e.id} quantity NaN`).not.toBeNaN();
+    }
+  });
+});
