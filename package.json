@@ -12,8 +12,13 @@
     "format": "prettier --write .",
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
-    "test:e2e:smoke": "SUITE=smoke playwright test --grep @smoke",
-    "test:e2e:full": "SUITE=full playwright test"
+    "test:e2e:smoke": "cross-env SUITE=smoke playwright test --grep @smoke",
+    "test:e2e:full": "cross-env SUITE=full playwright test --grep-invert @smoke",
+    "test:e2e:smoke:update": "cross-env SUITE=smoke playwright test --grep @smoke --update-snapshots",
+    "test:e2e:full:update": "cross-env SUITE=full playwright test --grep-invert @smoke --update-snapshots",
+    "test:e2e:smoke:headed": "cross-env SUITE=smoke playwright test --grep @smoke --headed",
+    "test:e2e:full:headed": "cross-env SUITE=full playwright test --grep-invert @smoke --headed",
+    "test:e2e:all": "npm run test:e2e:smoke && npm run test:e2e:full"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
