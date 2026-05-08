@@ -21,13 +21,14 @@ type LinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   children?: ReactNode;
 };
 
+const TLinkAny = TLink as unknown as React.ComponentType<any>;
+
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   ({ to, replace, state: _state, end: _end, children, ...rest }, ref) => {
     return (
-      // @ts-expect-error — relaxed typing for ported codebase
-      <TLink ref={ref} to={to} replace={replace} {...rest}>
+      <TLinkAny ref={ref} to={to} replace={replace} {...rest}>
         {children}
-      </TLink>
+      </TLinkAny>
     );
   },
 );
@@ -41,28 +42,26 @@ type NavLinkProps = Omit<LinkProps, "className"> & {
 
 export const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
   ({ to, className, children, ...rest }, ref) => {
+    const renderChild = (args: { isActive?: boolean }) => {
+      const isActive = !!args?.isActive;
+      const cls =
+        typeof className === "function"
+          ? className({ isActive, isPending: false })
+          : className;
+      return <span className={cn(cls)}>{children}</span>;
+    };
     return (
-      // @ts-expect-error — relaxed typing
-      <TLink
-        ref={ref}
-        to={to}
-        {...rest}
-        // @ts-expect-error — TanStack supports activeProps; we synthesize className
-        children={(args: { isActive?: boolean }) => {
-          const isActive = !!args?.isActive;
-          const cls =
-            typeof className === "function"
-              ? className({ isActive, isPending: false })
-              : className;
-          return <span className={cn(cls)}>{children}</span>;
-        }}
-      />
+      <TLinkAny ref={ref} to={to} {...rest}>
+        {renderChild}
+      </TLinkAny>
     );
   },
 );
 NavLink.displayName = "NavLink";
 
-export function useParams<T extends Record<string, string | undefined> = Record<string, string | undefined>>(): T {
+export function useParams<
+  T extends Record<string, string | undefined> = Record<string, string | undefined>,
+>(): T {
   return tUseParams({ strict: false }) as T;
 }
 
@@ -77,19 +76,19 @@ export function useLocation() {
   };
 }
 
+type NavArg = string | number | { to?: string; replace?: boolean; search?: any; params?: any };
+
 export function useNavigate() {
   const nav = tUseNavigate();
-  return (arg: string | number | { to?: string; replace?: boolean }) => {
+  return (arg: NavArg) => {
     if (typeof arg === "number") {
       if (typeof window !== "undefined") window.history.go(arg);
       return;
     }
     if (typeof arg === "string") {
-      // @ts-expect-error — relaxed
-      nav({ to: arg });
+      (nav as any)({ to: arg });
       return;
     }
-    // @ts-expect-error — relaxed
-    nav(arg);
+    (nav as any)(arg);
   };
 }
