@@ -161,21 +161,23 @@ export default function HeroMedia() {
       className="hero-bg absolute inset-0 overflow-hidden"
       style={{ zIndex: 0, backgroundColor: "#0b0f14" }}
     >
-      {/* LCP image — high priority, eager, served via <img> for early paint.
-          srcSet/sizes lets the browser pick the right variant before JS runs. */}
+      {/* LCP image — preloaded, sync-decoded for instant first paint.
+          Intrinsic 1376x768 matches the source so the browser reserves the
+          correct aspect-ratio box (zero CLS) without forcing a reflow.
+          srcSet/sizes lets the browser pick the cheapest variant to decode. */}
       <img
         src={FALLBACK_IMG}
         srcSet="/assets/hero/atdb-hero-monument-C3bd27q6-768.webp 768w, /assets/hero/atdb-hero-monument-C3bd27q6-1280.webp 1280w, /assets/hero/atdb-hero-monument-C3bd27q6-1920.webp 1920w"
         sizes="100vw"
-        width={1920}
-        height={1080}
+        width={1376}
+        height={768}
         alt=""
         aria-hidden
-        decoding="async"
+        decoding="sync"
         fetchPriority="high"
         loading="eager"
         className="absolute inset-0 h-full w-full object-cover object-center"
-        style={{ zIndex: 0, ...parallaxStyle }}
+        style={{ zIndex: 0, contentVisibility: "auto", ...parallaxStyle }}
       />
 
       {mountVideo && (
