@@ -107,7 +107,7 @@ export default function EquipmentDetail() {
                       onClick={() => setActiveImage(i)}
                       className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${activeImage === i ? "border-orange-500 shadow-lg shadow-orange-500/20" : "border-transparent opacity-60 hover:opacity-100"}`}
                     >
-                      <img src={img} alt="" className="image-polish w-full h-full object-cover" />
+                      <img src={img} alt="" loading="lazy" decoding="async" className="image-polish w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
