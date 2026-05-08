@@ -76,7 +76,7 @@ export default function RevealOnScroll({ children, className = "", delay = 0, st
       className={className}
       style={{
         opacity: shown ? 1 : 0,
-        transform: shown ? "translateY(0)" : "translateY(24px)",
+        transform: shown ? "translate3d(0,0,0)" : "translate3d(0,24px,0)",
         transition: `opacity 700ms ease ${delay}ms, transform 700ms cubic-bezier(0.2,0.7,0.2,1) ${delay}ms`,
         willChange: shown ? "auto" : "opacity, transform",
       }}
