@@ -279,7 +279,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
 
   const facts: Array<[string, string]> = [
     ["CAPACITY",       eq.capacity],
-    ["YEAR",           String(eq.year)],
+    ["YEAR",           eq.year ? String(eq.year) : "—"],
     ["ORIGIN",         eq.origin],
     ["FUEL",           eq.fuel],
     ["AVAILABLE",      `${eq.quantity} ${STR.units}`],
@@ -320,7 +320,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     [STR.model,    eq.model],
     [STR.capacity, eq.capacity],
     [STR.origin,   eq.origin],
-    [STR.year,     String(eq.year)],
+    [STR.year,     eq.year ? String(eq.year) : "—"],
     [STR.fuel,     eq.fuel],
     [STR.qty,      `${eq.quantity} ${STR.units}`],
     [STR.notes,    eq.notes || "—"],
@@ -359,7 +359,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   doc.setTextColor(...BRAND.body);
   const personalised =
     `${eq.brand} ${eq.model} (${eq.notes || eq.categoryLabel}) — ${eq.capacity}, ` +
-    `${eq.fuel.toLowerCase()}, ${eq.origin}-built, year ${eq.year}. ` +
+    `${eq.fuel.toLowerCase()}, ${eq.origin}-built${eq.year ? `, year ${eq.year}` : ""}. ` +
     STR.descFallback;
   const descLines = doc.splitTextToSize(personalised, contentW);
   doc.text(descLines, MARGIN_X, y + 4);

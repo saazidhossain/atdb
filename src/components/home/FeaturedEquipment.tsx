@@ -50,7 +50,7 @@ export default function FeaturedEquipment() {
                 {eq.banglaLabel && (
                   <p lang="bn" className="text-xs text-white/50 mt-0.5 break-words [overflow-wrap:anywhere]">{eq.banglaLabel}</p>
                 )}
-                <p className="text-sm text-white/40 mt-1 break-words [overflow-wrap:anywhere]">{eq.capacity} · {eq.origin} · {eq.year}</p>
+                <p className="text-sm text-white/40 mt-1 break-words [overflow-wrap:anywhere]">{eq.capacity} · {eq.origin} · {eq.year || "—"}</p>
 
                 <div className="mt-auto pt-4 flex items-stretch gap-3">
                   <a
