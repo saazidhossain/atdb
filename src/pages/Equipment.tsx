@@ -17,7 +17,7 @@ export default function EquipmentPage() {
   const { t, lang } = useLang();
   const { add } = useCart();
 
-  const currentCategory = category ? equipmentCategories.find(c => c.slug === category) : null;
+  const currentCategory = category ? equipmentCategories.find(c => c.slug === category) : undefined;
 
   if (!category) {
     return (
