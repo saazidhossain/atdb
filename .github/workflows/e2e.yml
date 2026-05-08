@@ -28,9 +28,11 @@ jobs:
     env:
       CI: "true"
       BASE_URL: http://127.0.0.1:4173
-      # Number of retries Playwright applies to each failing test.
-      # Bump here (no code change) if a particular branch is extra flaky.
-      PW_RETRIES: "2"
+      # Per-suite retry budgets. Smoke is strict (catches real regressions
+      # fast); full absorbs more transient flake. Bump either here without
+      # touching code.
+      PW_SMOKE_RETRIES: "1"
+      PW_FULL_RETRIES: "2"
 
     steps:
       - name: Checkout
@@ -72,12 +74,15 @@ jobs:
           echo "Preview server failed to start" >&2
           exit 1
 
-      - name: Run Playwright tests
-        # `--retries` here overrides the config's default and makes the
-        # retry count visible in the workflow logs. Combined with
-        # `trace: on-first-retry` + `video: retain-on-failure` in the
-        # config, only flaky/failed runs produce heavy artifacts.
-        run: npx playwright test --retries=${PW_RETRIES}
+      - name: Run smoke E2E (fast lane, strict retries)
+        env:
+          SUITE: smoke
+        run: npx playwright test --grep @smoke
+
+      - name: Run full E2E (lenient retries)
+        env:
+          SUITE: full
+        run: npx playwright test --grep-invert @smoke
 
       - name: Stop preview server
         if: always()
