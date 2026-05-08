@@ -37,14 +37,17 @@ const FOOTER_H = 14;       // mm
 
 const STR = {
   subtitle: "Heavy Equipment Rental & 1st-Class Civil Contractor  ·  Est. 2000",
-  addr:     "Corporate: Dhaka  ·  Branch: Tangail  ·  +880 1712-106242  ·  atdbtrade.com",
+  addr:     "Corporate: House #319 (8F), Lane #8, East Kazi Para, Kafrul, Dhaka-1216  ·  Branch: Tangail-1900",
   sheet:    "EQUIPMENT SPECIFICATION SHEET",
+  refLabel: "Quotation Ref:",
   spec: "Specification", detail: "Detail",
-  category: "Category", brand: "Brand", model: "Model",
+  category: "Category", brand: "Brand", model: "Model / Serial",
   capacity: "Lifting / Operating Capacity",
   origin: "Country of Origin", year: "Year of Manufacture",
   fuel: "Engine / Fuel Type", qty: "Quantity Available",
-  notes: "Type / Configuration", asset: "Asset ID", units: "Unit(s)",
+  notes: "Type / Configuration", asset: "Asset ID",
+  certLabel: "Inspection Status",
+  certValue: "Certified & Operator-Ready",
   galleryHeading: "Equipment Gallery — Multiple Angles",
   galleryNoneNote: "Visual reference image (high-resolution photography available on request).",
   descHeading: "About This Equipment",
@@ -52,17 +55,31 @@ const STR = {
     "Inspected, maintained and operator-ready unit from ATDB Trade International's owned fleet. " +
     "Available for short-term and long-term rental across Bangladesh with experienced operators, " +
     "site mobilisation and 24/7 maintenance backup.",
-  ctaHeading: "Ready to mobilise this unit?",
+  ctaHeading: "Request a Quotation",
   ctaBody:
     "Contact our rental desk for availability, daily/weekly/monthly pricing, operator scope, fuel " +
     "terms and site mobilisation. Quotes are typically issued the same business day.",
   contactWa:    "WhatsApp:  +880 1712-106242",
+  contactPhone: "Phone:     +880 1816-666067",
   contactEmail: "Email:     saifulaapi@gmail.com",
   contactWeb:   "Website:   www.atdbtrade.com",
-  footerLeft:   "© ATDB Trade International",
+  footerLeft:   "© ATDB Trade International  ·  Confidential",
   pageOf: (a: number, b: number) => `Page ${a} of ${b}`,
   generated: "Generated",
 } as const;
+
+/** Format quantity: "02" → "2 Units", "01" → "1 Unit" */
+function fmtQty(q: string): string {
+  const n = parseInt(q, 10) || 1;
+  return `${n} ${n === 1 ? "Unit" : "Units"}`;
+}
+
+/** Generate a short quotation reference: ATDB-CR-001-20260508 */
+function makeRef(id: string): string {
+  const d = new Date();
+  const ds = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+  return `${id}-${ds}`;
+}
 
 // ─── Image loader → PNG data URL (jsPDF can't embed WEBP reliably) ────
 async function loadImage(
@@ -218,10 +235,16 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   // ── Title block ────────────────────────────────────────────────────
   let y = HEADER_H + 10;
 
+  const refCode = makeRef(eq.id);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(7.5);
   doc.setTextColor(...BRAND.orange);
   doc.text(STR.sheet, MARGIN_X, y);
+  // Quotation ref on the right
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(...BRAND.muted);
+  doc.text(`${STR.refLabel} ${refCode}`, W - MARGIN_X, y, { align: "right" });
   // hairline under eyebrow
   doc.setDrawColor(...BRAND.hair);
   doc.setLineWidth(0.3);
@@ -282,7 +305,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     ["YEAR",           eq.year ? String(eq.year) : "—"],
     ["ORIGIN",         eq.origin],
     ["FUEL",           eq.fuel],
-    ["AVAILABLE",      `${eq.quantity} ${STR.units}`],
+    ["AVAILABLE",      fmtQty(eq.quantity)],
   ];
   const rowH = (heroH - 6) / facts.length;
   facts.forEach(([k, v], i) => {
@@ -315,6 +338,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   y += 6;
 
   const specs: Array<[string, string]> = [
+    [STR.asset,    eq.id],
     [STR.category, eq.categoryLabel],
     [STR.brand,    eq.brand],
     [STR.model,    eq.model],
@@ -322,9 +346,9 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     [STR.origin,   eq.origin],
     [STR.year,     eq.year ? String(eq.year) : "—"],
     [STR.fuel,     eq.fuel],
-    [STR.qty,      `${eq.quantity} ${STR.units}`],
+    [STR.qty,      fmtQty(eq.quantity)],
     [STR.notes,    eq.notes || "—"],
-    [STR.asset,    eq.id],
+    [STR.certLabel, STR.certValue],
   ];
 
   autoTable(doc, {
@@ -423,17 +447,17 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   doc.text(ctaLines, MARGIN_X + 7, y + 14);
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(9.5);
-  // Evenly distribute the three contact lines so nothing clips on A4.
+  doc.setFontSize(8.5);
   const ctaInnerW = contentW - 14;
-  const colW = ctaInnerW / 3;
+  const colW = ctaInnerW / 4;
   const baseX = MARGIN_X + 7;
   const baseY = y + ctaH - 9;
   doc.setTextColor(...BRAND.orange);
   doc.text(STR.contactWa,    baseX,                 baseY);
   doc.setTextColor(...BRAND.white);
-  doc.text(STR.contactEmail, baseX + colW,          baseY);
-  doc.text(STR.contactWeb,   baseX + colW * 2,      baseY);
+  doc.text(STR.contactPhone, baseX + colW,          baseY);
+  doc.text(STR.contactEmail, baseX + colW * 2,      baseY);
+  doc.text(STR.contactWeb,   baseX + colW * 3,      baseY);
 
   // ── Paginate footer on every page ──────────────────────────────────
   const totalPages = doc.getNumberOfPages();
@@ -442,7 +466,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     drawFooter(doc, p, totalPages, eq);
   }
 
-  doc.save(`ATDB-${eq.id}-${eq.brand.replace(/\s+/g, "")}-${eq.model.replace(/\s+/g, "")}-Spec-Sheet.pdf`);
+  doc.save(`ATDB-${eq.id}-Spec-Sheet.pdf`);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────
