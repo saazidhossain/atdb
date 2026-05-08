@@ -14,6 +14,7 @@ import { CartProvider } from "@/hooks/useCart";
 import CartDrawer from "@/components/CartDrawer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Toaster } from "@/components/ui/sonner";
+import PageTransition from "@/components/PageTransition";
 
 function NotFoundComponent() {
   return (
@@ -163,7 +164,9 @@ function RootComponent() {
       <LangProvider>
         <CartProvider>
           <ErrorBoundary routeName="root">
-            <Outlet />
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
             <CartDrawer />
             <Toaster />
           </ErrorBoundary>
