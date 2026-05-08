@@ -21,13 +21,13 @@ jobs:
     # never have to run `playwright install-deps` ourselves.
     container:
       image: mcr.microsoft.com/playwright:v1.59.1-jammy
-      options: --user 1001
+      # Run as root so `playwright install-deps` (apt-get) can succeed
+      # even on runners/images where the default user lacks sudo.
+      options: --user 0
 
     env:
       CI: "true"
       BASE_URL: http://127.0.0.1:4173
-      # Image already has browsers; skip the post-install download.
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
     steps:
       - name: Checkout
@@ -41,6 +41,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --no-audit --no-fund
+
+      - name: Install Playwright browsers + system deps
+        # Defensive: the official Playwright image already ships browsers
+        # and shared libraries, but running this guarantees the suite
+        # never fails with "error while loading shared libraries"
+        # (libglib-2.0, libnss3, libwebkit, …) if the image drifts from
+        # the pinned @playwright/test version, or if a contributor swaps
+        # in a slimmer base image. `install --with-deps` is idempotent.
+        run: npx playwright install --with-deps
 
       - name: Build app
         run: npm run build
