@@ -49,10 +49,10 @@ export default function About() {
             ].map(p => (
               <div key={p.role} className="glass-card rounded-2xl p-6 glass-hover card-tilt flex items-start gap-4">
                 <UserCircle2 className="w-10 h-10 text-orange-400 flex-shrink-0" />
-                <div>
-                  <p className="text-[11px] tracking-[0.22em] text-white/50 mb-1">{p.role}</p>
+                <div className="min-w-0">
+                  <p className="text-[11px] tracking-[0.18em] sm:tracking-[0.22em] text-white/50 mb-1 break-words">{p.role}</p>
                   <h3 className="text-xl font-semibold font-display">{p.name}</h3>
-                  <a href={`tel:${p.phone}`} className="text-sm text-orange-300 hover:text-orange-200 mt-1 inline-block">{p.phone}</a>
+                  <a href={`tel:${p.phone}`} className="text-sm text-orange-300 hover:text-orange-200 mt-1 inline-block break-all">{p.phone}</a>
                 </div>
               </div>
             ))}
@@ -116,8 +116,8 @@ export default function About() {
                       className="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]"
                     />
                   </div>
-                  <p className="text-[11px] tracking-[0.22em] text-white/50 mt-5">{c.code}</p>
-                  <p className="font-semibold font-display mt-1">{c.title}</p>
+                  <p className="text-[11px] tracking-[0.18em] sm:tracking-[0.22em] text-white/50 mt-5 break-words">{c.code}</p>
+                  <p className="font-semibold font-display mt-1 break-words">{c.title}</p>
                   <p className="text-sm text-white/50 mt-1 break-words">{c.ref}</p>
                 </div>
               </div>

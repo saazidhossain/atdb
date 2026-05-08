@@ -29,13 +29,13 @@ export default function StandardsStrip() {
   ];
 
   return (
-    <section className="relative w-full max-w-full py-14 md:py-20 border-t border-white/5 overflow-hidden [contain:layout_paint] [transform:translateZ(0)]">
+    <section className="relative w-full max-w-full py-14 pb-24 md:py-20 border-t border-white/5 overflow-hidden [contain:layout_paint] [transform:translateZ(0)]">
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 box-border">
         <div className="text-center mb-10">
           <p className="eyebrow mb-3">
             {t("International Standards & Compliance", "আন্তর্জাতিক মান ও কমপ্লায়েন্স")}
           </p>
-          <h2 className="text-2xl md:text-3xl font-bold font-display max-w-2xl mx-auto">
+          <h2 className="text-[clamp(1.9rem,7vw,2.25rem)] font-bold font-display max-w-2xl mx-auto text-balance">
             {t(
               "Audited, classed and tender-ready credentials.",
               "অডিটেড, শ্রেণিভুক্ত ও টেন্ডার-প্রস্তুত ক্রেডেনশিয়াল।"
@@ -43,23 +43,23 @@ export default function StandardsStrip() {
           </h2>
         </div>
 
-        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full max-w-full box-border [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-['']">
+        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 p-0 m-0 w-full max-w-full box-border [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-['']">
           {items.map((it) => (
             <li key={it.code as string} className="list-none w-full max-w-full box-border">
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
-                className={`group block w-full max-w-full h-full box-border glass-card glass-hover rounded-2xl p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+                className={`group block w-full max-w-full h-full box-border glass-card glass-hover rounded-xl sm:rounded-2xl p-4 sm:p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
               >
-                <div className="flex items-start gap-4 w-full">
-                  <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105">
+                <div className="flex items-start gap-3 sm:gap-4 w-full">
+                  <span className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105">
                     <it.icon className={`w-6 h-6 ${it.tone}`} aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1 flex flex-col justify-center">
-                    <span className="block text-[11px] tracking-[0.22em] text-white/50 mb-1 break-words">
+                    <span className="block text-[10px] sm:text-[11px] tracking-[0.18em] sm:tracking-[0.22em] text-white/50 mb-1 break-words leading-snug">
                       {it.code}
                     </span>
-                    <span className="block text-sm font-semibold text-white/85 leading-snug break-words">
+                    <span className="block text-[13px] sm:text-sm font-semibold text-white/85 leading-snug break-words pr-2">
                       {it.label}
                     </span>
                   </div>

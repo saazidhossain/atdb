@@ -1,9 +1,30 @@
+import { useEffect, useState } from "react";
 import { getWhatsAppQuoteUrl } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
 
 export default function WhatsAppFAB() {
   const { t } = useLang();
+  const [nearFooter, setNearFooter] = useState(false);
   const label = t("Chat on WhatsApp for a quote", "কোটেশনের জন্য হোয়াটসঅ্যাপে চ্যাট করুন");
+
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+    if (!footer) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setNearFooter(entry.isIntersecting);
+      },
+      {
+        rootMargin: "0px 0px -72px 0px",
+        threshold: 0.01,
+      }
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <a
       href={getWhatsAppQuoteUrl()}
@@ -11,8 +32,10 @@ export default function WhatsAppFAB() {
       rel="noopener noreferrer"
       aria-label={label}
       title={label}
-      style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)" }}
-      className="fixed right-5 sm:right-6 z-50 w-14 h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-2xl shadow-green-600/30 hover:bg-green-500 hover:shadow-green-500/40 hover:scale-105 active:scale-95 transition-all animate-pulse-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background group"
+      style={{
+        bottom: `calc(env(safe-area-inset-bottom, 0px) + ${nearFooter ? "6.5rem" : "1rem"})`,
+      }}
+      className="fixed right-4 sm:right-6 z-50 w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full bg-green-600 text-white shadow-2xl shadow-green-600/30 hover:bg-green-500 hover:shadow-green-500/40 hover:scale-105 active:scale-95 transition-all duration-300 animate-pulse-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background group"
     >
       <span className="sr-only">{label}</span>
       <svg aria-hidden="true" className="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
