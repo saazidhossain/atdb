@@ -12,9 +12,4 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
-  vite: {
-    test: {
-      exclude: ["e2e/**", "node_modules/**"],
-    },
-  },
 });
