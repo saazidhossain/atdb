@@ -19,6 +19,26 @@ export default function CountUp({ end, suffix = "", duration = 1800, className =
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+
+    // Start immediately if any pixel is already in the viewport on mount
+    // (mobile hero counters often sit at the very bottom of 100dvh and
+    //  never reach a 0.3 intersection ratio without a scroll).
+    const inViewportNow = () => {
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const vw = window.innerWidth || document.documentElement.clientWidth;
+      return r.bottom > 0 && r.top < vh && r.right > 0 && r.left < vw;
+    };
+    if (inViewportNow()) {
+      setStarted(true);
+      return;
+    }
+
+    if (typeof IntersectionObserver === "undefined") {
+      setStarted(true);
+      return;
+    }
+
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -26,11 +46,24 @@ export default function CountUp({ end, suffix = "", duration = 1800, className =
           io.disconnect();
         }
       },
-      { threshold: 0.3 }
+      // threshold 0 + small bottom inset → fires the moment ANY pixel
+      // enters, with a 64px lead-in so the count begins just before the
+      // card is fully on-screen. Works for short mobile viewports where
+      // the stat row never reaches a 30% visibility ratio without scroll.
+      { threshold: 0, rootMargin: "0px 0px -64px 0px" }
     );
     io.observe(el);
-    return () => io.disconnect();
+
+    // Hard safety: if nothing fires in 2.5s (orientation change, hidden
+    // tab, exotic browser), still animate so users never see a static "0".
+    const safety = window.setTimeout(() => setStarted(true), 2500);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(safety);
+    };
   }, []);
+
 
   useEffect(() => {
     if (!started) return;
