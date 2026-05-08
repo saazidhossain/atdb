@@ -1,10 +1,20 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
+import { zodValidator, fallback } from "@tanstack/zod-adapter";
+import { z } from "zod";
 import Equipment from "@/pages/Equipment";
 import { equipmentCategories, equipmentData } from "@/data/equipment";
 
 const SITE = "https://atdbtrade.com";
 
+const equipmentSearchSchema = z.object({
+  brand: fallback(z.string(), "").default(""),
+  origin: fallback(z.string(), "").default(""),
+  year: fallback(z.string(), "").default(""),
+  q: fallback(z.string(), "").default(""),
+});
+
 export const Route = createFileRoute("/equipment/$category/")({
+  validateSearch: zodValidator(equipmentSearchSchema),
   head: ({ params }) => {
     const cat = equipmentCategories.find((c) => c.slug === params.category);
     const label = cat?.label ?? "Equipment";
