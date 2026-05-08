@@ -5,15 +5,14 @@ import { useLang } from "@/hooks/useLang";
 
 export default function ProjectHighlights() {
   const { t, lang } = useLang();
-  const featured = projectsData.slice(0, 6);
+  const featured = projectsData.slice(0, 3);
   return (
     <section className="section-padding">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-12">
+        <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
           <div>
             <p className="eyebrow mb-3">{t("Project Highlights", "প্রজেক্ট হাইলাইটস")}</p>
             <h2 className="text-3xl md:text-4xl font-bold font-display">{t("Powering Bangladesh's biggest builds.", "বাংলাদেশের সবচেয়ে বড় নির্মাণে শক্তি যোগাচ্ছি।")}</h2>
-            <p className="text-white/50 mt-3">{t("Six representative builds across mega-infrastructure, industrial, roadways and specialised civil works.", "ছয়টি প্রতিনিধিত্বমূলক প্রজেক্ট — মেগা ইনফ্রাস্ট্রাকচার, শিল্প, সড়ক ও বিশেষ সিভিল ওয়ার্কস জুড়ে।")}</p>
           </div>
           <Link to="/projects" className="hidden md:flex items-center gap-2 text-sm text-white/60 hover:text-orange-400 transition-colors">
             {t("View all projects", "সব প্রজেক্ট দেখুন")} <ArrowRight className="w-4 h-4" />
