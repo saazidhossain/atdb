@@ -1,0 +1,58 @@
+name: Lighthouse CI
+
+# Runs Lighthouse against the published Lovable preview after every push to
+# main and on every PR. Fails the check if Performance / Accessibility /
+# Best-Practices / SEO drop below the budget defined in lighthouserc.json.
+#
+# Setup (one-time):
+#   1. In repo Settings → Secrets, add LHCI_PREVIEW_URL = full URL to your
+#      preview / published Lovable site (e.g. https://your-app.lovable.app).
+#   2. Optionally add LHCI_GITHUB_APP_TOKEN to post results back as a check.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    name: Lighthouse audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.14.x
+
+      - name: Wait for preview to be reachable
+        env:
+          URL: ${{ secrets.LHCI_PREVIEW_URL }}
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::error::LHCI_PREVIEW_URL secret is not set"
+            exit 1
+          fi
+          for i in $(seq 1 30); do
+            if curl -sfL --max-time 10 "$URL" > /dev/null; then
+              echo "Preview is up: $URL"
+              exit 0
+            fi
+            echo "Waiting for $URL ... ($i/30)"
+            sleep 5
+          done
+          echo "::error::Preview never became reachable"
+          exit 1
+
+      - name: Run Lighthouse CI
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LHCI_PREVIEW_URL: ${{ secrets.LHCI_PREVIEW_URL }}
+        run: lhci autorun --config=./lighthouserc.json
