@@ -3,6 +3,7 @@ import { Link } from "@/lib/router-compat";
 import { getWhatsAppQuoteUrl } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
 import HeroMedia from "./HeroMedia";
+import HeroSkeleton from "./HeroSkeleton";
 import CountUp from "@/components/CountUp";
 
 export default function HeroSection() {
@@ -19,6 +20,11 @@ export default function HeroSection() {
       <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-20 w-[32rem] h-[32rem] rounded-full bg-orange-500/[0.07] blur-3xl" style={{ zIndex: 2 }} />
       <div aria-hidden className="pointer-events-none absolute inset-0 hero-vignette" style={{ zIndex: 2 }} />
       <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-40 hero-fade-bottom" style={{ zIndex: 3 }} />
+
+      {/* Skeleton placeholders — sit above the media but below the real
+          text. Auto-fade once fonts + LCP image are ready, eliminating the
+          jarring "blank → pop" sequence on slow mobile networks. */}
+      <HeroSkeleton />
 
       <div
         className="relative z-10 max-w-7xl mx-auto w-full"
