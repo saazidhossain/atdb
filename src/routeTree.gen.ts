@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EquipmentIndexRouteImport } from './routes/equipment.index'
 import { Route as EquipmentCategoryIndexRouteImport } from './routes/equipment.$category.index'
 import { Route as EquipmentCategoryIdRouteImport } from './routes/equipment.$category.$id'
 
+const ProjectsRoute = ProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const EquipmentCategoryIdRoute = EquipmentCategoryIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/projects': typeof ProjectsRoute
   '/equipment/': typeof EquipmentIndexRoute
   '/equipment/$category/$id': typeof EquipmentCategoryIdRoute
   '/equipment/$category/': typeof EquipmentCategoryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/projects': typeof ProjectsRoute
   '/equipment': typeof EquipmentIndexRoute
   '/equipment/$category/$id': typeof EquipmentCategoryIdRoute
   '/equipment/$category': typeof EquipmentCategoryIndexRoute
@@ -50,6 +58,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/projects': typeof ProjectsRoute
   '/equipment/': typeof EquipmentIndexRoute
   '/equipment/$category/$id': typeof EquipmentCategoryIdRoute
   '/equipment/$category/': typeof EquipmentCategoryIndexRoute
@@ -58,14 +67,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/projects'
     | '/equipment/'
     | '/equipment/$category/$id'
     | '/equipment/$category/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/equipment' | '/equipment/$category/$id' | '/equipment/$category'
+  to:
+    | '/'
+    | '/projects'
+    | '/equipment'
+    | '/equipment/$category/$id'
+    | '/equipment/$category'
   id:
     | '__root__'
     | '/'
+    | '/projects'
     | '/equipment/'
     | '/equipment/$category/$id'
     | '/equipment/$category/'
@@ -73,6 +89,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProjectsRoute: typeof ProjectsRoute
   EquipmentIndexRoute: typeof EquipmentIndexRoute
   EquipmentCategoryIdRoute: typeof EquipmentCategoryIdRoute
   EquipmentCategoryIndexRoute: typeof EquipmentCategoryIndexRoute
@@ -80,6 +97,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/projects': {
+      id: '/projects'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -113,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProjectsRoute: ProjectsRoute,
   EquipmentIndexRoute: EquipmentIndexRoute,
   EquipmentCategoryIdRoute: EquipmentCategoryIdRoute,
   EquipmentCategoryIndexRoute: EquipmentCategoryIndexRoute,
