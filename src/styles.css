@@ -235,6 +235,13 @@ html.lenis, html.lenis body { height: auto; }
 }
 .animate-hero-kenburns { animation: hero-kenburns 22s ease-out forwards; will-change: transform; }
 
+/* Hero entry animation — explicit so it does not collide with tw-animate-css's `animate-in fade-in` system. */
+@keyframes atdb-fade-in {
+  0%   { opacity: 0; transform: translate3d(0, 14px, 0); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.animate-fade-in { animation: atdb-fade-in 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
 @keyframes logo-enter {
   0%   { opacity: 0; transform: scale(0.95); }
   100% { opacity: 1; transform: scale(1); }
@@ -264,7 +271,7 @@ html.lenis, html.lenis body { height: auto; }
 .group:focus-visible .logo-sweep::after { transform: translateX(120%); }
 
 @media (prefers-reduced-motion: reduce) {
-  .logo-enter, .animate-hero-kenburns, .animate-marquee, .animate-float, .animate-pulse-glow { animation: none !important; }
+  .logo-enter, .animate-hero-kenburns, .animate-marquee, .animate-float, .animate-pulse-glow, .animate-fade-in { animation: none !important; }
   .logo-sweep::after { display: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
