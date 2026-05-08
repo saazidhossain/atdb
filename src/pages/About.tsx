@@ -39,6 +39,12 @@ export default function About() {
         </div>
       </section>
 
+      {/* Standards strip — moved from homepage */}
+      <StandardsStrip />
+
+      {/* Our Journey timeline — moved from homepage */}
+      <JourneyTimeline />
+
       {/* Leadership */}
       <section className="pb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
