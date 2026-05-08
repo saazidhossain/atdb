@@ -91,7 +91,7 @@ export default function EquipmentDetail() {
             {/* Gallery */}
             <div>
               <div className="relative aspect-[4/3] rounded-2xl overflow-hidden glass-card mb-4">
-                <img src={allImages[activeImage]} alt={equipment.name} className="image-polish w-full h-full object-cover" />
+                <img src={allImages[activeImage]} alt={equipment.name} decoding="async" fetchPriority="high" loading="eager" className="image-polish w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 {equipment.realPhotos && activeImage < equipment.realPhotos.length && (
                   <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-green-600/90 backdrop-blur text-xs font-semibold text-white flex items-center gap-1.5">
