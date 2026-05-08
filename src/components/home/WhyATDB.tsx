@@ -25,13 +25,13 @@ export default function WhyATDB() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl mb-12">
           <p className="eyebrow mb-3">{t("Why ATDB", "কেন ATDB")}</p>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-display">{t("26 years of certified, on-site delivery — and counting.", "২৬ বছরের সার্টিফাইড, অন-সাইট ডেলিভারি — এবং চলছে।")}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 font-display">{t("Certified, on-site, on-time.", "সার্টিফাইড, অন-সাইট, অন-টাইম।")}</h2>
           <p className="text-white/50 leading-relaxed">
-            {t("Bangladesh's largest road, bridge, pharma and industrial developers come back to ATDB because every machine is certified, every operator is trained, and every quotation arrives on WhatsApp within minutes.", "বাংলাদেশের শীর্ষ রোড, ব্রিজ, ফার্মা ও ইন্ডাস্ট্রিয়াল ডেভেলপাররা ATDB-তে ফিরে আসেন — প্রতিটি মেশিন সার্টিফাইড, প্রতিটি অপারেটর প্রশিক্ষিত এবং প্রতিটি কোটেশন মিনিটেই WhatsApp-এ।")}
+            {t("Every machine is certified, every operator trained, and every quotation lands on WhatsApp within minutes.", "প্রতিটি মেশিন সার্টিফাইড, প্রতিটি অপারেটর প্রশিক্ষিত — প্রতিটি কোটেশন মিনিটেই WhatsApp-এ।")}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {reasons.map((r) => (
             <div key={r.title} className="glass-card rounded-2xl p-6 glass-hover card-tilt group">
               <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-4 group-hover:bg-orange-500/20 transition-colors">
@@ -41,32 +41,6 @@ export default function WhyATDB() {
               <p className="text-sm text-white/50 leading-relaxed">{r.desc}</p>
             </div>
           ))}
-        </div>
-
-        {/* 26-year professional timeline */}
-        <div className="relative">
-          <div className="flex items-center gap-3 mb-8">
-            <Milestone className="w-5 h-5 text-orange-400" />
-            <p className="text-[11px] tracking-[0.28em] text-orange-300 uppercase font-semibold">{t("Our 26-Year Journey", "আমাদের ২৬ বছরের যাত্রা")}</p>
-          </div>
-
-          <ol className="relative border-l border-orange-500/30 pl-6 sm:pl-8 space-y-6">
-            {milestones.map((m) => (
-              <li key={m.year} className="relative">
-                <span
-                  aria-hidden
-                  className="absolute -left-[33px] sm:-left-[41px] top-1 w-4 h-4 rounded-full bg-orange-500 ring-4 ring-orange-500/15"
-                />
-                <div className="glass-card rounded-2xl p-5 glass-hover">
-                  <div className="flex items-baseline gap-3 mb-1">
-                    <span className="font-display text-2xl font-bold text-orange-400">{m.year}</span>
-                    <span className="text-base font-semibold text-white">{m.title}</span>
-                  </div>
-                  <p className="text-sm text-white/55 leading-relaxed">{m.desc}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
         </div>
       </div>
     </section>
