@@ -54,10 +54,10 @@ export default function FeaturedEquipment() {
               </Link>
 
               <div className="p-4 sm:p-5 flex-1 flex flex-col min-w-0">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-[10px] font-mono text-white/40 leading-none">{eq.id}</span>
-                  <span className="text-[10px] text-white/30 leading-none">·</span>
-                  <span className="text-[10px] text-orange-400/70 truncate leading-none">{eq.categoryLabel}</span>
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1.5 text-[10px]">
+                  <span className="font-mono text-white/40 leading-none">{eq.id}</span>
+                  <span className="hidden sm:inline text-white/30 leading-none">·</span>
+                  <span className="text-orange-400/70 leading-none break-words [overflow-wrap:anywhere]">{eq.categoryLabel}</span>
                 </div>
                 <Link to={`/equipment/${eq.category}/${eq.id}`} className="text-base sm:text-lg font-semibold text-white hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]">
                   {eq.name}
