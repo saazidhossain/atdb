@@ -1,41 +1,104 @@
 import { useEffect, useState } from "react";
 
 /**
- * Lightweight page preloader. Hides as soon as window 'load' fires
- * (or after a 1.2s safety timeout, whichever comes first).
- * Fixed full-screen overlay → no layout shift on exit (CLS = 0).
+ * Lightweight page preloader + deterministic page-ready flag.
+ *
+ * Two independent timelines:
+ *   • UX overlay  — fades on window 'load' (or 1.2s safety) so users
+ *                   never stare at a spinner.
+ *   • __APP_READY__ — waits for EVERY signal that affects pixels, then
+ *                   flips. E2E snapshots gate on this so there is no
+ *                   chance of capturing mid-render frames.
+ *
+ * Ready signals (all must resolve, with a 6s hard cap):
+ *   1. window 'load'                     — subresources downloaded
+ *   2. document.fonts.ready              — text widths stable
+ *   3. eager <img>.decode() resolves     — LCP image painted
+ *   4. CountUp animations elapsed (~2.6s after load)
+ *   5. 2× rAF                            — layout + paint flushed
  */
 export default function PagePreloader() {
   const [hidden, setHidden] = useState(false);
   const [removed, setRemoved] = useState(false);
 
   useEffect(() => {
-    let done = false;
-    const finish = () => {
-      if (done) return;
-      done = true;
+    // ── UX overlay timing (independent of __APP_READY__) ──────────────
+    let uxDone = false;
+    const fadeOverlay = () => {
+      if (uxDone) return;
+      uxDone = true;
       setHidden(true);
-      // Notify SkeletonShimmer (and any other coordinated overlay) so it
-      // can begin its own fade in lockstep — no flicker between layers.
       window.dispatchEvent(new CustomEvent("atdb:preloader-exit"));
-      // Page-ready flag for E2E snapshot tests — waits on this instead of
-      // arbitrary timeouts so visual diffs stay deterministic.
-      try {
-        (window as Window & { __APP_READY__?: boolean }).__APP_READY__ = true;
-        window.dispatchEvent(new Event("atdb:app-ready"));
-      } catch { /* ignore */ }
-      // Remove from DOM after fade-out so it can't intercept events
       window.setTimeout(() => setRemoved(true), 320);
     };
-    const safety = window.setTimeout(finish, 1200);
-    if (document.readyState === "complete") {
-      window.setTimeout(finish, 200);
-    } else {
-      window.addEventListener("load", finish, { once: true });
-    }
+    const uxSafety = window.setTimeout(fadeOverlay, 1200);
+    if (document.readyState === "complete") window.setTimeout(fadeOverlay, 200);
+    else window.addEventListener("load", fadeOverlay, { once: true });
+
+    // ── __APP_READY__ timing (snapshot-grade) ─────────────────────────
+    let readyDone = false;
+    const win = window as Window & { __APP_READY__?: boolean };
+    win.__APP_READY__ = false;
+
+    const markReady = () => {
+      if (readyDone) return;
+      readyDone = true;
+      win.__APP_READY__ = true;
+      window.dispatchEvent(new Event("atdb:app-ready"));
+    };
+
+    const waitForLoad = () =>
+      new Promise<void>((resolve) => {
+        if (document.readyState === "complete") resolve();
+        else window.addEventListener("load", () => resolve(), { once: true });
+      });
+
+    const waitForFonts = () =>
+      (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready
+        ?.then(() => undefined)
+        .catch(() => undefined) ?? Promise.resolve();
+
+    const waitForEagerImages = async () => {
+      const imgs = Array.from(
+        document.querySelectorAll<HTMLImageElement>(
+          'img[loading="eager"], img[fetchpriority="high"]'
+        )
+      );
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete && img.naturalWidth > 0
+            ? Promise.resolve()
+            : (img.decode?.().catch(() => undefined) ??
+               new Promise<void>((r) => {
+                 img.addEventListener("load", () => r(), { once: true });
+                 img.addEventListener("error", () => r(), { once: true });
+               }))
+        )
+      );
+    };
+
+    const doubleRaf = () =>
+      new Promise<void>((r) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => r()))
+      );
+
+    // CountUp eases for ~1.6–2.2s; give 2.6s after load to settle.
+    const waitForCountUp = () => new Promise<void>((r) => window.setTimeout(r, 2600));
+
+    const hardCap = window.setTimeout(markReady, 6000);
+
+    (async () => {
+      await waitForLoad();
+      await Promise.all([waitForFonts(), waitForEagerImages(), waitForCountUp()]);
+      await doubleRaf();
+      window.clearTimeout(hardCap);
+      markReady();
+    })();
+
     return () => {
-      window.clearTimeout(safety);
-      window.removeEventListener("load", finish);
+      window.clearTimeout(uxSafety);
+      window.clearTimeout(hardCap);
+      window.removeEventListener("load", fadeOverlay);
     };
   }, []);
 
