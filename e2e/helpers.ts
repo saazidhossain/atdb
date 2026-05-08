@@ -1,11 +1,11 @@
 import type { Page } from "@playwright/test";
 
 /**
- * Wait for the app's `window.__APP_READY__` flag (set by PagePreloader once
- * `load` fires + a small settle delay). Falls back gracefully if the page
- * never sets it (e.g. SSR-only HTML, errors).
+ * Wait for the app's `window.__APP_READY__` flag, set by PagePreloader once
+ * load + fonts + eager images + CountUp + 2× rAF have all settled (hard cap
+ * 6s). Snapshot tests should ALWAYS gate on this — never on fixed timeouts.
  */
-export async function waitForAppReady(page: Page, timeout = 8000) {
+export async function waitForAppReady(page: Page, timeout = 10_000) {
   await page.waitForLoadState("domcontentloaded");
   await page
     .waitForFunction(
@@ -14,8 +14,11 @@ export async function waitForAppReady(page: Page, timeout = 8000) {
       { timeout }
     )
     .catch(() => { /* fall through — caller can still proceed */ });
-  // Wait for web fonts so text width is identical between runs
-  await page.evaluate(() => (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready);
+  // Belt-and-braces: re-await fonts in the test context too, since the
+  // page may have navigated after the initial flag was set.
+  await page.evaluate(
+    () => (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready
+  );
 }
 
 /** CSS that freezes animations + hides flaky overlays for stable snapshots. */
