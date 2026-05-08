@@ -102,6 +102,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      // Preload responsive LCP hero image (mobile + desktop variants)
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/hero/atdb-hero-monument-C3bd27q6-768.webp",
+        type: "image/webp",
+        media: "(max-width: 768px)",
+        // @ts-expect-error fetchpriority valid HTML
+        fetchpriority: "high",
+      },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/hero/atdb-hero-monument-C3bd27q6-1280.webp",
+        type: "image/webp",
+        media: "(min-width: 769px)",
+        // @ts-expect-error fetchpriority valid HTML
+        fetchpriority: "high",
+      },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Hind+Siliguri:wght@400;500;600;700&display=swap",
