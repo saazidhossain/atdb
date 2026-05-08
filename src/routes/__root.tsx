@@ -107,11 +107,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "preload",
         as: "image",
         href: "/assets/hero/atdb-hero-monument-C3bd27q6-1280.webp",
-        imagesrcset:
+        imageSrcSet:
           "/assets/hero/atdb-hero-monument-C3bd27q6-768.webp 768w, /assets/hero/atdb-hero-monument-C3bd27q6-1280.webp 1280w, /assets/hero/atdb-hero-monument-C3bd27q6-1920.webp 1920w",
-        imagesizes: "100vw",
+        imageSizes: "100vw",
         type: "image/webp",
-        fetchpriority: "high",
+        fetchPriority: "high",
       },
       {
         rel: "stylesheet",
